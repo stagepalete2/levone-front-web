@@ -1,0 +1,182 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+$bg-dark: #2C2C34;
+$card-bg: #44444D;
+$accent-yellow: #D1E335;
+$text-white: #FFFFFF;
+
+.overlay {
+	position: fixed;
+	inset: 0;
+	background-color: $main-bg;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+
+	/* Prevent page behind from scrolling */
+	overflow: hidden;
+
+	pointer-events: all;
+	touch-action: none;
+	user-select: none;
+
+
+	.modal {
+		position: relative;
+		width: 20rem;
+		padding: 20px;
+		background: white;
+		border-radius: 35px;
+		overflow: hidden;
+		z-index: 10000;
+		border: 3px solid $main-purple;
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+
+		.header {
+			@include flexCenter(row);
+			font-size: 30px;
+
+			.logotype {
+				width: 200px;
+			}
+		}
+
+		.body {
+			.text {
+				text-align: start;
+				font-size: 20px;
+				margin-top: 10px;
+				color: $main-dark;
+
+				.highlight {
+					color: $main-red;
+					font-weight: 600;
+				}
+			}
+
+
+			.inputContainer {
+				position: relative;
+				width: 100%;
+				background-color: $secondary-purple;
+				border-radius: 12px;
+				padding: 10px;
+				cursor: text;
+				overflow: hidden;
+				margin-top: 20px;
+
+				transition: background-color 0.2s ease-in-out;
+				border: 3px solid $dark-purple;
+
+				&.error {
+					background-color: $main-error !important;
+					border: 3px solid red;
+				}
+			}
+
+			.hiddenInput {
+				position: absolute;
+				caret-color: transparent;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				opacity: 0;
+				z-index: 10;
+				cursor: pointer;
+			}
+
+			.visualLayer {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				pointer-events: none;
+				padding: 5px;
+			}
+
+			.label {
+				color: white;
+				font-size: 0.8rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				margin-bottom: 5px;
+				opacity: 0.9;
+			}
+
+			.pinGrid {
+				display: flex;
+				gap: 12px;
+				justify-content: center;
+				width: 100%;
+			}
+
+			.pinCell {
+				width: 30px;
+				height: 40px;
+				border-bottom: 3px solid $main-dark;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				color: white;
+				font-size: 1.5rem;
+				font-weight: 800;
+			}
+
+			.shake {
+				animation: shake 0.4s ease-in-out;
+			}
+
+			@keyframes shake {
+
+				0%,
+				100% {
+					transform: translateX(0);
+				}
+
+				25% {
+					transform: translateX(-5px);
+				}
+
+				75% {
+					transform: translateX(5px);
+				}
+			}
+
+			.submitButton {
+				width: 100%;
+				padding: 15px;
+				border-radius: 25px;
+				background-color: $main-lime;
+				border: 3px solid $secondary-lime;
+				color: #2C2C34;
+				font-weight: 800;
+				font-size: 1.1rem;
+				text-transform: uppercase;
+				cursor: pointer;
+				transition: transform 0.1s;
+				margin-top: 20px;
+
+				&:active {
+					transform: scale(0.98);
+				}
+
+				&:disabled {
+					opacity: 0.7;
+				}
+			}
+
+
+			.qr {
+				width: 50px;
+				margin: 0 auto;
+				margin-top: 20px;
+			}
+		}
+	}
+}

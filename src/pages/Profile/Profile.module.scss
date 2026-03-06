@@ -1,0 +1,255 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+$bg-dark: #2C2C34;
+$bg-btn-gray: #C4C4C4;
+$accent-yellow: #D1E335;
+$accent-purple: #C274E8;
+$text-dark: #222222;
+
+.wrap {
+    @include flexCenter(column);
+	@include wrapContainer();
+
+    width: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    
+    position: relative;
+    z-index: 2;
+}
+
+.balanceContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    border: 3px solid $light-purple;
+    border-radius: 25px;
+    padding: 0px;
+    padding-left: 20px;
+    width: 100%;
+    max-width: 280px;
+    height: 44px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    cursor: pointer;
+
+    .label {
+        font-weight: 700;
+        font-size: 14px;
+        color: #444;
+        text-transform: uppercase;
+    }
+
+    .valueBadge {
+        background-color: $main-lime;
+        border: 3px solid $secondary-lime;
+        min-width: 80px;
+        border-radius: 20px;
+        padding: 0 16px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 800;
+        font-size: 18px;
+
+        span {
+            color: $text-dark;
+        }
+        
+        .star {
+            font-size: 14px;
+        }
+    }
+}
+
+// Меню кнопок
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 280px;
+    margin-bottom: 40px;
+    
+
+    .menuBtn {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        background-color: white;
+        border: 3px solid $light-purple;
+        gap: 15px;
+        border-radius: 25px;
+        height: 44px;
+        padding: 0 20px;
+        width: 100%;
+        cursor: pointer;
+        transition: transform 0.1s;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+
+        &:active {
+            transform: scale(0.98);
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            font-size: 20px;
+            color: #444;
+        }
+
+        .text {
+            font-weight: 700;
+            font-size: 14px;
+            color: #444;
+            text-transform: uppercase;
+        }
+    }
+}
+.promoWrapper {
+    width: 100%;
+    max-width: 280px;
+    margin: 10px auto; // Центрируем блок и добавляем отступы сверху/снизу
+    
+    .promoBtn {
+        display: block; // ВАЖНО: Делаем ссылку блочным элементом, чтобы она имела высоту и ширину
+        width: 100%;
+        box-sizing: border-box; // Чтобы padding не увеличивал ширину больше 100%
+        
+        background-color: $secondary-purple;
+        color: white;
+        border: 3px solid $dark-purple;
+        border-radius: 25px;
+        padding: 15px;
+        
+        font-weight: 800;
+        font-size: 16px;
+        line-height: 1.2;
+        text-transform: uppercase;
+        text-align: center;
+        text-decoration: none; // Убираем подчеркивание ссылки
+        
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(194, 116, 232, 0.4);
+        transition: transform 0.1s ease; // Плавная анимация нажатия
+
+        &:active {
+            transform: scale(0.98);
+        }
+        
+        // Опционально: убираем стандартный цвет посещенной ссылки
+        &:visited {
+            color: white;
+        }
+    }
+}
+.promoSection {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.sectionTitle {
+    color: $main-dark;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    padding-left: 5px;
+}
+
+.promoSlider {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    width: 100%;
+    
+    &::-webkit-scrollbar {
+        display: none; 
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.promoCard {
+    flex: 0 0 auto;
+    width: 280px;
+    height: 120px;
+    background-color: white;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+}
+
+.cardLeft {
+    width: 60%;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 2px solid $secondary-gray;
+    border-radius: 16px 0 0 16px;
+    position: relative;
+
+    .brandText {
+        font-size: 0.6rem;
+        color: #999;
+        text-decoration: line-through;
+        margin-bottom: 4px;
+    }
+
+    .promoText {
+        font-size: 0.85rem;
+        font-weight: 700;
+        line-height: 1.1;
+        color: #333;
+        z-index: 2;
+    }
+    
+    .illustrationPlaceholder {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        background-color: #eee;
+        border-radius: 50%;
+        opacity: 0.5;
+    }
+}
+
+.cardRight {
+    width: 40%;
+    background-color: $main-lime;
+    border: 2px solid $secondary-lime;
+    border-radius: 0 16px 16px 0;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    
+    .discountTitle {
+        font-weight: 800;
+        font-size: 0.9rem;
+        color: #2C2C2C;
+        margin-bottom: 5px;
+        line-height: 1.1;
+    }
+
+    .dates {
+        font-size: 0.75rem;
+        color: #444;
+        margin-bottom: 5px;
+    }
+    
+    .subText {
+        font-size: 0.6rem;
+        color: #555;
+        line-height: 1;
+    }
+}

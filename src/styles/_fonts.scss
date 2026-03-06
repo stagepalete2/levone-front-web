@@ -1,0 +1,29 @@
+
+@font-face {
+	font-family: "Abge";
+	src: url('./fonts/EBGaramond-VariableFont_wght.ttf') format('truetype');
+	font-weight: 100 900;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Abge";
+	src: url('./fonts/EBGaramond-VariableFont_wght.ttf') format('truetype');
+	font-weight: 100 900;
+	font-style: italic;
+}
+
+@font-face {
+    font-family: 'My Fucking Font';
+    src: url('./fonts/PT_Sans-Caption-Web-Bold.ttf') format('truetype');
+    font-weight: 700; /* 700 - это стандартное значение для bold */
+    font-style: normal;
+}
+
+/* 2. Настраиваем ОБЫЧНЫЙ шрифт (Regular) */
+@font-face {
+    font-family: 'My Fucking Font';
+    src: url('./fonts/PT_Sans-Caption-Web-Regular.ttf') format('truetype');
+    font-weight: 400; /* 400 - это стандартное значение для normal */
+    font-style: normal;
+}

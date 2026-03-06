@@ -1,0 +1,122 @@
+@use '../../../styles//variables' as *;
+
+$purple-color: #A766D6;
+$bg-color: #2C2C33;
+$text-white: #FFFFFF;
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background-color: #FDFFEA;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 120px 20px 140px;
+    z-index: 9999;
+    overflow: hidden;
+    touch-action: none;
+
+    // Логотип вверху
+    .logoContainer {
+        margin-bottom: 20px;
+        width: 200px;
+        height: 200px;
+        border-radius: 30px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .title {
+        font-size: 22px;
+        font-weight: 800;
+        color: $main-dark;
+        text-transform: uppercase;
+        text-align: center;
+        line-height: 1.3;
+        margin-bottom: 50px;
+        letter-spacing: 0.5px;
+    }
+
+    .taskList {
+        width: 100%;
+        max-width: 320px; 
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: auto;
+
+        .taskRow {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            text-align: left;
+            padding: 5px;
+
+            .checkbox {
+                width: 28px;
+                height: 28px;
+                min-width: 28px;
+                border-radius: 50%;
+                border: 3px solid #E1E0E5;
+                background: #F5F4F9;
+                transition: all 0.3s ease;
+                position: relative;
+
+                &.checked {
+                    background-color: $secondary-purple;
+                    border-color: $dark-purple;
+                    box-shadow: 0 0 10px rgba($purple-color, 0.5);
+                }
+            }
+
+            .taskLabel {
+                font-size: 15px;
+                font-weight: 600;
+                color: $main-dark;
+                line-height: 1.2;
+            }
+        }
+    }
+
+    .mainButton {
+        width: 100%;
+        max-width: 320px;
+        padding: 10px;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        
+        background-color: $secondary-purple;
+        border: 4px solid $mini-dark-purple;
+        color: $text-white;
+        &:active {
+            transform: scale(0.98);
+        }
+
+        &.shake {
+            animation: shake 0.4s ease;
+        }
+    }
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-8px); }
+    80% { transform: translateX(8px); }
+    100% { transform: translateX(0); }
+}

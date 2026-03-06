@@ -1,0 +1,83 @@
+@use '../../../styles/variables' as *;
+
+.card {
+	position: relative;
+	border-radius: 16px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	transition: transform 0.1s;
+	aspect-ratio: 1 / 1.3;
+
+	&:active {
+		transform: scale(0.98);
+	}
+
+	.birthdayBadge {
+		position: absolute;
+		top: 8px;
+		left: 8px;
+		z-index: 5;
+		background: linear-gradient(135deg, $main-purple, $dark-purple);
+		color: #fff;
+		font-size: 9px;
+		font-weight: 800;
+		text-transform: uppercase;
+		padding: 3px 7px;
+		border-radius: 8px;
+		letter-spacing: 0.5px;
+	}
+
+	.imageWrapper {
+		width: 100%;
+		background-color: $main-bg;
+		aspect-ratio: 1 / 1.4;
+		border-radius: 20px;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		border: 2px solid $main-purple;
+		position: relative;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			border-radius: 16px;
+		}
+
+		.actionButton {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			background: linear-gradient(135deg, $main-purple, $dark-purple);
+			border: 2px solid $dark-purple;
+			border-radius: 16px;
+			padding: 8px 0;
+			font-size: 0.8rem;
+			font-weight: 800;
+			color: #fff;
+			text-transform: uppercase;
+			cursor: pointer;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+			&:disabled {
+				cursor: not-allowed;
+				box-shadow: none;
+			}
+		}
+	}
+
+	&.cardUsed {
+		opacity: 0.7;
+		filter: grayscale(1);
+
+		.actionButton {
+			background: $main-gray;
+			color: $main-dark;
+			border: 2px solid $light-gray;
+		}
+	}
+}

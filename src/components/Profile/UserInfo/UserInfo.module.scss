@@ -1,0 +1,103 @@
+// components/Profile/UserInfo/UserInfo.module.scss
+@use '../../../styles/variables' as *;
+
+$bg-gray-icon: #8F9094;
+$accent-yellow: #D1E335;
+$text-white: #FFFFFF;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.avatarWrapper {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 15px;
+    
+
+    .avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 20px; // Скругленный квадрат
+        object-fit: cover;
+    }
+
+    .avatarPlaceholder {
+        width: 100%;
+        height: 100%;
+        background-color: $secondary-bg;
+        border: 3px solid $secondary-gray;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $main-dark;
+
+        svg {
+            width: 100%;
+            height: 100%;
+            color: black;
+            fill: $main-dark;
+        }
+    }
+
+    .addIcon {
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+        width: 28px;
+        height: 28px;
+        background-color: #35353E; // Темная подложка круга
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $accent-yellow;
+        font-weight: 800;
+        font-size: 20px;
+        border: 2px solid #35353E;
+    }
+}
+
+.name {
+    color: $main-dark;
+    font-weight: 800;
+    font-size: 1.5rem;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+}
+
+.levelInfo {
+    width: 100%;
+    max-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .levelText {
+        color: $text-white;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .progressBar {
+        width: 100%;
+        height: 8px;
+        background-color: #585960; // Темно-серый фон бара
+        border-radius: 4px;
+        overflow: hidden;
+
+        .progressFill {
+            height: 100%;
+            background-color: $accent-yellow;
+            border-radius: 4px;
+        }
+    }
+}

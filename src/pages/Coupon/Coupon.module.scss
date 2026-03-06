@@ -1,0 +1,177 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+$bg-dark: #2C2C34;
+$bg-btn-gray: #C4C4C4;
+$accent-yellow: #D1E335;
+$accent-purple: #C274E8;
+$text-dark: #222222;
+
+// Обертка всей страницы (темный фон)
+.pageWrapper {
+    flex: 1;
+	height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+}
+
+.lottieContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 30;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pageTitle {
+    color: black;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    text-transform: uppercase;
+    margin: 0;
+    z-index: 2;
+}
+
+// Карточка купона
+.card {
+    background-color: $secondary-purple;
+    width: 80%;
+    max-width: 340px;
+    border-radius: 20px;
+    padding: 1.5rem;
+	z-index: 20;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    border: 4px solid $main-purple;
+}
+
+// Крестик закрытия
+.closeBtn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    svg {
+        fill: white;
+
+        path {
+            stroke: white;;
+        }
+    }
+}
+
+.headerTitle {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+}
+
+// Контейнер фото
+.imageContainer {
+    width: 100%;
+    aspect-ratio: 1 / 1.2;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+
+    .whiteBoxx {
+        background-color: white;
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        border-radius: 12px;
+        padding: .6rem;
+        margin-top: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        border: 2px solid $main-purple;
+    }
+}
+
+.productImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.placeholderImg {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+// Белые плашки с текстом
+.whiteBox {
+    background-color: white;
+    width: 100%;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border: 2px solid $main-purple;
+
+    font-size: 20px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.productName {
+    font-size: 1.3rem !important;
+    font-weight: 700;
+    color: #2C2C2C;
+    margin: 0;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+.timerLabel {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: black;
+    margin-bottom: 0.2rem;
+    text-transform: uppercase;
+}

@@ -1,0 +1,166 @@
+@use '../../../../styles/variables' as *;
+
+// Цвета для светлой темы (если переменные недоступны)
+// $main-lime: #D1E335;
+// $main-dark: #222;
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+    background-color: $secondary-bg;
+    border: 4px solid $light-purple;
+    width: 100%;
+    max-width: 360px;
+    border-radius: 24px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+    .closeBtn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: rgba(0,0,0,0.09);
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        color: black; // Серый цвет иконки
+        transition: background 0.2s;
+        
+        &:active {
+            background: rgba(0,0,0,0.1);
+            color: #555;
+        }
+    }
+
+    .header {
+        padding: 25px 30px 5px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        .subTitle {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: $main-dark;
+            text-transform: uppercase;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: $main-dark; // Темный заголовок
+            line-height: 1.1;
+        }
+    }
+
+    .animationWrapper {
+		position: relative;
+        width: 100%;
+		height: 200px;
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        margin-bottom: -10px;
+
+        .lottieAnim {
+			position: absolute;
+            width: 345px;
+            height: auto;
+        }
+    }
+
+    .content {
+        padding: 0 20px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        
+        .innerContent {
+            background-color: #fff;
+            border: 3px solid $secondary-gray; 
+            padding: 15px;
+            border-radius: 15px;
+
+            p {
+                padding: 0;
+                margin: 0;
+            }
+
+            .warning {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+
+                img {
+                    width: 30px;
+                    height: 30px;
+                }
+            }
+
+            .highlight {
+                color: $main-error;
+            }
+        }
+        .startButton {
+            width: 100%;
+            background-color: $main-lime; // Лаймовая кнопка
+            color: #222;
+            border: 3px solid $secondary-lime;
+            border-radius: 25px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.1s;
+            box-shadow: 0 4px 15px rgba(209, 227, 53, 0.4);
+    
+            &:active {
+                transform: scale(0.98);
+            }
+        }
+    }
+
+
+}
+
+// Анимации появления
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px) scale(0.95); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}

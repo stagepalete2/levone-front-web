@@ -1,0 +1,71 @@
+@use '../../../styles/variables' as *;
+
+$accent-yellow: #D1E335;
+$header-purple: #C274E8; // Примерный фиолетовый с макета
+
+.card {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	border-radius: 40px;
+	overflow: hidden;
+	box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+	border: 3px solid $main-purple;
+}
+
+.cardHeader {
+	background-color: $header-purple;
+	padding: 15px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	
+	.icon {
+		width: 26px;
+		height: 26px;
+		font-size: 20px;
+		color: white;
+	}
+
+	.title {
+		color: white;
+		font-weight: 800;
+		text-transform: uppercase;
+		font-size: 18px;
+		letter-spacing: 1px;
+	}
+}
+
+.cardBody {
+	background-color: white;
+	padding: 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+	position: relative;
+
+	.textBlock {
+		text-align: center;
+		color: #222;
+		font-weight: 700;
+		font-size: .8rem;
+		line-height: 1.4;
+		text-transform: uppercase;
+	}
+
+	.reviewButton {
+		width: 100%;
+		padding: 15px;
+		border-radius: 25px;
+		border: 3px solid $secondary-lime;
+		background-color: $main-lime;
+		color: #1F1F1F;
+		font-weight: 800;
+		font-size: 14px;
+		text-transform: uppercase;
+		cursor: pointer;
+		box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+	}
+}

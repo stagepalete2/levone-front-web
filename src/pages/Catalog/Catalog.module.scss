@@ -1,0 +1,81 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+$bg-dark: #2C2C34;
+$accent-yellow: #D1E335;
+$text-white: #FFFFFF;
+
+.wrap {
+    @include flexCenter(column);
+	@include wrapContainer();
+    
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+
+    // Создаем обертку для контента, чтобы поднять его над фоном
+    .innerContent {
+        position: relative;
+        z-index: 1; // Поднимаем над анимацией (у которой z-index: 0)
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid $main-dark;
+        padding-bottom: 1rem;
+        
+        position: relative;
+        z-index: 1;
+        
+        // ... старые стили ...
+        .titleBlock .title {
+            color: $main-dark;
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+
+        .balanceBadge {
+             // ... старые стили ...
+            background-color: $main-lime;
+            border: 2px solid $secondary-lime;
+            border-radius: 12px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+
+            .icon {
+                width: 22px;
+                height: 22px; 
+                font-size: 18px; 
+            }
+
+            span{ 
+                color: #222; 
+            }
+        }
+    }
+
+    .content {
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+}

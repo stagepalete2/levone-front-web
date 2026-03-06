@@ -1,0 +1,49 @@
+@use './variables' as *;
+
+@mixin flexCenter($direction) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: $direction;
+}
+
+@mixin wrapContainer() {
+	padding: 1rem 2rem 0rem 2rem !important;
+	width: 100%;
+}
+
+@mixin playCard() {
+	background-color: $primaryColorBlack;
+	border: 2px solid $primaryColorYellow;
+	border-radius: 5px;
+	color: white;
+	padding: 1.5rem 10px;
+	width: 100%;
+	margin-top: 0.4rem;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+	// Subtle floating + glow animation
+	animation: neonPulse 3s infinite ease-in-out alternate;
+
+	@keyframes neonPulse {
+		from {
+			box-shadow:
+				0 0 6px 1px rgba($primaryColorYellow, 0.35),
+				0 0 10px 3px rgba($primaryColorYellow, 0.15);
+		}
+
+		to {
+			box-shadow:
+				0 0 10px 2px rgba($primaryColorYellow, 0.6),
+				0 0 18px 6px rgba($primaryColorYellow, 0.3);
+		}
+	}
+
+	// Optional hover enhancement
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow:
+			0 0 12px 3px rgba($primaryColorYellow, 0.7),
+			0 0 22px 8px rgba($primaryColorYellow, 0.4);
+	}
+}

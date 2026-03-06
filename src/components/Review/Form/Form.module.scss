@@ -1,0 +1,103 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.formContainer {
+    @include flexCenter(column);
+    width: 100%;
+    
+
+    .headerTitle {
+        background-color: $secondary-purple;
+        width: 100%;
+        padding: 15px;
+        border-radius: 15px 15px 0 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        font-weight: bold;
+		
+		img {
+			width: 24px;
+			height: 24px;
+		}
+		
+		span {
+			font-size: 14px;
+		}
+    }
+
+    .ratingBox {
+        background: $secondary-bg;
+        width: 100%;
+        padding: 20px;
+        border-radius: 0 0 15px 15px;
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border: 3px solid $main-purple;
+
+        .star {
+            width: 40px;
+            filter: grayscale(100%) opacity(0.4);
+            transition: 0.2s;
+            cursor: pointer;
+            &.active_star {
+                filter: none;
+            }
+        }
+    }
+
+    .inputsBlock {
+        background: $secondary-bg;
+        width: 100%;
+        padding: 20px;
+        border-radius: 20px;
+        border: 3px solid $main-purple;
+
+        .formGroup {
+            margin-bottom: 15px;
+            .label {
+                display: block;
+                color: $main-dark;
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 3px;
+                padding-left: 5px;
+            }
+            .formControl {
+                width: 100%;
+                background-color: #ffffff;
+                border: 3px solid $main-purple;
+                border-radius: 12px;
+                padding: 10px;
+                color: black;
+                font-weight: 500;
+                &:disabled { opacity: 0.9; }
+
+                &::placeholder {
+                    color: $secondary-dark;
+                    opacity: 1;
+                }
+                
+                &::-webkit-input-placeholder {
+                    color: $secondary-dark;
+                }
+            }
+        }
+
+        .sendBtn {
+            width: 100%;
+            margin-top: 10px;
+            background-color: $secondary-purple;
+            color: white;
+            border: 3px solid $dark-purple;
+            border-radius: 25px;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+    }
+}

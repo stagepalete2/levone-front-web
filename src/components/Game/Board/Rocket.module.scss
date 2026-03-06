@@ -1,0 +1,292 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.gameContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    
+    /* ИСПОЛЬЗУЕМ DVH ДЛЯ МОБИЛЬНЫХ БРАУЗЕРОВ */
+    height: 100vh; 
+    height: 100dvh; 
+    
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    z-index: 5;
+
+    /* УЧИТЫВАЕМ "ЧЕЛКУ" ТЕЛЕФОНА И ШАПКУ ПРИЛОЖЕНИЯ */
+    padding-top: env(safe-area-inset-top); 
+
+    --purple-dark: #5B2D82;
+    --purple-main: #7B3FA0;
+    --lime: #C8E635;
+    --lime-dark: #A8C61A;
+    --white: #FFFFFF;
+    --dark: #1A1A2E;
+    --gold: #FFD700;
+    --orange: #FF6B35;
+
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(180deg, #0D0D1A 0%, var(--purple-dark) 40%, var(--purple-main) 100%);
+    color: white;
+    user-select: none;
+    
+    padding-bottom: 80px;
+}
+
+/* Stars */
+.stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 2s infinite ease-in-out;
+}
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Header - ТЕПЕРЬ ОН НИЖЕ */
+.header {
+    position: absolute;
+    /* Отступ от челки + 10px */
+    top: calc(10px + env(safe-area-inset-top)); 
+    left: 0;
+    right: 0;
+    padding: 0 20px; /* Убрал vertical padding, так как задаем top */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    height: 60px; /* Фиксируем высоту хедера */
+}
+
+.logoImg {
+    height: 50px;
+    width: auto;
+    filter: drop-shadow(0 0 10px rgba(200, 230, 53, 0.5));
+}
+
+.scoreDisplay {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 8px 15px;
+    border-radius: 30px;
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    span {
+        font-weight: 900;
+        color: var(--gold);
+        font-size: 18px;
+    }
+}
+
+/* Altitude Interface */
+.altitudeDisplay {
+    position: absolute;
+    left: 15px;
+    /* Чуть выше середины, так как трек сместился вниз */
+    top: 45%; 
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.altitudeValue {
+    font-family: sans-serif;
+    font-weight: 900;
+    font-size: 24px;
+    color: var(--lime);
+    text-shadow: 0 0 10px rgba(200, 230, 53, 0.8);
+    transition: transform 0.1s;
+    &.boost { transform: scale(1.2); color: var(--gold); }
+}
+
+.altitudeBar {
+    width: 6px;
+    height: 150px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    margin-top: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.altitudeFill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(180deg, var(--lime) 0%, var(--lime-dark) 100%);
+    transition: height 0.1s linear;
+    box-shadow: 0 0 8px var(--lime);
+}
+
+/* Track & Prizes */
+.trackContainer {
+    position: absolute;
+    left: 50%;
+    
+    /* !!! ГЛАВНОЕ ИЗМЕНЕНИЕ !!! */
+    /* Было 80px. Ставим 15vh (15% от высоты экрана), чтобы уйти под шапку VK */
+    top: 17vh; 
+    
+    bottom: 280px; 
+    transform: translateX(-50%);
+    width: 140px;
+    
+    /* Можно добавить min-height, чтобы на совсем маленьких экранах не сплющилось */
+    min-height: 300px;
+}
+
+.trackLine {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, rgba(200,230,53,0.1), rgba(200,230,53,0.4));
+    border-radius: 3px;
+    box-shadow: 0 0 20px rgba(200, 230, 53, 0.2);
+}
+
+.prizeZone {
+    position: absolute;
+    left: -70px;
+    right: -70px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        left: 70px; right: 70px; top: 50%;
+        height: 2px;
+        background: rgba(255,255,255,0.3);
+    }
+    
+    &.active {
+        transform: scale(1.2);
+        z-index: 5;
+        .prizeLabel { background: var(--gold); color: black; }
+    }
+
+    &.jackpot {
+        &::before {
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold), var(--orange), #FF4444); 
+            box-shadow: 0 0 10px var(--gold);
+        }
+    }
+}
+
+.prizeLabel {
+    background: rgba(255,255,255,0.2);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Rocket */
+.rocketContainer {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 100px;
+    z-index: 35;
+    bottom: 200px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; 
+}
+
+.rocketEmoji {
+    font-size: 60px;
+    transform: rotate(-45deg);
+    filter: drop-shadow(0 5px 15px rgba(255,100,100,0.5));
+    z-index: 2;
+}
+
+.flame {
+    position: absolute;
+    bottom: 0px;
+    width: 20px;
+    height: 40px;
+    background: orange;
+    border-radius: 50%;
+    filter: blur(5px);
+    opacity: 0;
+    z-index: 1;
+    transition: opacity 0.2s;
+    
+    &.active { 
+        opacity: 1; 
+        animation: flicker 0.1s infinite;
+    }
+}
+
+@keyframes flicker {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.8); }
+}
+
+/* Controls */
+.launchArea {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 300px; 
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 100px; 
+    z-index: 30;
+    pointer-events: none; 
+}
+
+.launchBtn {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(145deg, var(--lime) 0%, var(--lime-dark) 100%);
+    box-shadow: 0 0 30px rgba(200, 230, 53, 0.4);
+    color: var(--dark);
+    font-weight: 900;
+    font-size: 18px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.1s, filter 0.2s;
+    pointer-events: auto; 
+    
+    &:active { transform: scale(0.95); }
+    &:disabled { 
+        filter: grayscale(1); 
+        cursor: not-allowed; 
+        box-shadow: none;
+        background: #444;
+        color: #888;
+    }
+}

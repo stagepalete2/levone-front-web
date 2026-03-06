@@ -1,0 +1,95 @@
+@use '../../../styles/variables' as *;
+
+$card-bg: #35353E;
+$accent-yellow: #D1E335;
+$text-white: #FFFFFF;
+
+.card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    position: relative;
+    transition: transform 0.1s;
+    aspect-ratio: 1 / 1.3;
+
+    &:active {
+        transform: scale(0.98);
+    }
+
+    .imageWrapper {
+        width: 100%;
+        background-color: $main-bg;
+        aspect-ratio: 1 / 1.5;
+        border-radius: 20px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        border: 2px solid $main-dark;
+        border-bottom: 0;
+        background-color: $dark-purple;
+
+        .title{
+            font-size: .9rem;
+            color: $main-lime;
+            margin: 0;
+            padding: 5px 0 0 0;
+        }
+
+        img {
+            width: auto;
+            height: 60%;
+            object-fit: fill;
+            border-radius: 16px;
+        }
+
+        .actionButton {
+            width: 100%;
+            z-index: 111;
+            background-color: $main-lime;
+            border: 2px solid $secondary-lime;
+            border-radius: 16px;
+            padding: 8px 0;
+            font-size: .8rem;
+            font-weight: 800;
+            color: #222;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            
+            &:disabled {
+                cursor: not-allowed;
+                box-shadow: none;
+            }
+        }
+    }
+
+
+    // Состояние "Использован"
+    &.cardUsed {
+        opacity: 0.9;
+        filter: grayscale(1);
+
+        .actionButton {
+            background-color: $main-gray;
+            color: $main-dark;
+            border: 2px solid $light-gray;
+        }
+    }
+
+    // Состояние "На перезарядке"
+    &.cardCooldown {
+        opacity: 0.9; // Чуть светлее чем used, чтобы было видно, что скоро станет доступно
+        
+        .actionButton {
+            background-color: $main-gray;
+            color: $main-dark;
+            border: 2px solid $light-gray;
+            font-size: 11px;
+        }
+    }
+}

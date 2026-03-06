@@ -1,0 +1,107 @@
+@use '../../../styles/variables' as *;
+
+.card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    position: relative;
+    transition: transform 0.1s;
+    aspect-ratio: 1 / 1.6;
+
+
+    &:active {
+        transform: scale(0.98);
+    }
+
+    &.disabled {
+        filter: grayscale(0.5);
+        cursor: not-allowed;
+
+        &:active {
+            transform: none;
+        }
+    }
+
+    .imageWrapper {
+        width: 100%;
+        background-color: $main-bg;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        position: relative;
+        aspect-ratio: 1 / 1.5;
+        
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 3px solid $main-dark;
+            border-radius: 16px;
+        }
+        
+        .infoBlock {
+            position: absolute;
+            bottom: 27px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 44px;
+            width: 100%;
+            padding: 10px 8px;
+            border: 3px solid $secondary-gray;
+            border-radius: 16px 16px 0 0;
+
+            color: $main-dark;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.2;
+            text-transform: uppercase;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .priceBlock {
+            text-align: center;
+            bottom: 0;
+            width: 100%;
+            background-color: $main-lime;
+            border: 2px solid $secondary-lime;
+            border-radius: 16px;
+            padding: 8px 0;
+            font-size: .8rem;
+            font-weight: 800;
+            color: #222;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 10;
+    
+            span {
+                color: $main-dark;
+                font-weight: 800;
+                text-transform: uppercase;
+                transition: background-color 0.2s;
+            }
+
+            .cooldown {
+                color: $main-dark;
+            }
+
+            &.disabled {
+                background-color: $main-gray;
+                color: $light-gray;
+                border: 2px solid $light-gray;
+                font-size: .7rem;
+            }
+        }
+    }
+}

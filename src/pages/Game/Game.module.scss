@@ -1,0 +1,107 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.wrap {
+	@include flexCenter(column);
+	@include wrapContainer();
+	box-sizing: border-box;
+    position: relative;
+
+	.text {
+		@include flexCenter(column);
+		margin: 1.5rem 0 1.5rem 0;
+        
+        position: relative; 
+        z-index: 1;
+
+		h2 {
+			font-weight: 800;
+			text-align: center;
+			font-size: 1.5rem;
+			line-height: 1.2;
+			color: $main-dark;
+			text-transform: uppercase;
+			margin: 0;
+		}
+	}
+
+	.content {
+		@include flexCenter(column);
+		gap: 1.5rem;
+		width: 100%;
+		max-width: 400px;
+        
+		
+        position: relative;
+        z-index: 1;
+		
+
+	}
+}
+
+// Карточка правил
+.rulesCard {
+	width: 100%;
+	background-color: $secondary-bg;
+	border: 3px solid $main-purple;
+	border-radius: 16px;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	box-sizing: border-box;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    
+    // Остальные стили без изменений
+	.cardTitle {
+		font-size: 1.2rem;
+		text-transform: uppercase;
+		color: $main-dark;
+		margin-bottom: 20px;
+		font-weight: 600;
+		letter-spacing: 1px;
+	}
+
+	.cardDescription {
+		text-align: center;
+		color: $main-dark;
+		font-size: .9rem;
+		line-height: 1.4;
+		margin-bottom: 25px;
+		font-weight: 500;
+		text-transform: uppercase;
+	}
+
+	.cardIcon {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		color: rgba(255, 255, 255, 0.8);
+		gap: 5px;
+		margin-bottom: 15px;
+
+		span {
+			font-size: 40px;
+			text-transform: uppercase;
+			font-weight: 600;
+		}
+	}
+
+	.playButton {
+		width: 100%;
+		padding: 12px;
+		border-radius: 25px;
+		border: 3px solid $secondary-lime;
+		background-color: $main-lime;
+		color: $main-dark;
+		font-weight: 800;
+		font-size: 1.3rem;
+		text-transform: uppercase;
+		cursor: pointer;
+		transition: transform 0.1s;
+
+		&:active {
+			transform: scale(0.98);
+		}
+	}
+}

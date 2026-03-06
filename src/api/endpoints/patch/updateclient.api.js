@@ -1,0 +1,31 @@
+
+
+
+
+import axios from 'axios'
+import { useCompany } from '../../../zustand'
+
+const patchClient = async (userData) => {
+	const domain = useCompany.getState().domain
+
+	try {
+		const response = await axios.patch(`https://${domain}/api/v1/client/`, userData)
+		return response.data
+	} catch (error) {
+		if (error.response) {
+			console.error("API error:", error.response.data);
+
+			if (error.response.status === 404) {
+				return null;
+			}
+
+			throw new Error(error.response.data?.error || "Request failed");
+		} else if (error.request) {
+			throw new Error("No response from server");
+		} else {
+			throw new Error(error.message);
+		}
+	}
+}
+
+export default patchClient

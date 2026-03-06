@@ -1,0 +1,92 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// Настройки
+$button-radius: 12px; // Скругление самой кнопки
+$border-thickness: 3px; // Толщина светящейся рамки (паддинг)
+$inner-radius: 9px; // ВАЖНО: 12px - 3px = 9px. Чтобы углы были ровными.
+
+.nav {
+	@include flexCenter(row);
+	width: 100%;
+	gap: 5px;
+	z-index: 22;
+	box-sizing: border-box;
+
+	.link {
+		flex: 1;
+		width: 100%;
+		max-width: 200px;
+		height: 48px;
+
+		position: relative;
+		overflow: hidden; // Обрезаем Lottie по форме кнопки
+		border-radius: $button-radius;
+
+		// Убираем старые стили
+		background: transparent;
+		border: none;
+
+		// Этот padding создает место для рамки
+		padding: $border-thickness;
+
+		box-sizing: border-box;
+		cursor: pointer;
+
+		// Цвет неактивной кнопки (фон)
+		background-color: $secondary-purple;
+
+		// Когда кнопка активна, фон делает прозрачным, 
+		// чтобы мы видели Lottie, а Inner Content перекроет центр
+		&.selected {
+			background-color: transparent;
+		}
+
+		// --- СЛОЙ 1: Анимация (лежит под всем) ---
+		.lottie_border_layer {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 0;
+			pointer-events: none;
+			// Можно чуть увеличить масштаб, если края Lottie файла имеют пустые поля
+			transform: scale(1.02);
+		}
+
+		// --- СЛОЙ 2: Внутренний контент ---
+		.inner_content {
+			position: relative;
+			z-index: 1;
+
+			width: 100%;
+			height: 100%;
+
+			// Фон внутренней части (перекрывает центр анимации)
+			background-color: $secondary-purple;
+
+			// Скругление внутреннего блока должно быть меньше внешнего!
+			border-radius: $inner-radius;
+
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 0 5px;
+
+			.text {
+				font-size: clamp(11px, 3.5vw, 14px);
+				font-weight: 700;
+				text-align: center;
+				white-space: nowrap;
+				color: $text-white;
+			}
+		}
+
+		// Эффект нажатия
+		&:active {
+			transform: scale(0.97);
+			transition: transform 0.1s;
+		}
+	}
+}

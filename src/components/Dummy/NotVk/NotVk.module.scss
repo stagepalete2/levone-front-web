@@ -1,0 +1,48 @@
+@use '../../../styles/mixins' as *;
+
+.wrap {
+	@include flexCenter(column);
+	height: 100vh;
+	text-align: center;
+	background-color: #000;
+
+	.logotype {
+		width: 80%;
+		max-width: 300px;
+		margin-bottom: 20px;
+	}
+
+	.divider {
+		width: 100%;
+		border: 0;
+		height: 1px;
+		background: rgba(255, 255, 255, 0.2);
+		margin: 20px 0;
+	}
+
+	.button {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 5px;
+		padding: 12px 20px;
+		border-radius: 8px;
+		font-weight: 600;
+		font-size: 16px;
+		text-decoration: none;
+		text-align: center;
+		margin-top: 1.5rem;
+
+		background-color: #0077FF;
+		color: white;
+		border: none;
+		box-shadow: 0 2px 6px rgba(0, 119, 255, 0.4);
+    	transition: all 0.2s ease;
+
+		&:active {
+			background-color: #005FCC;
+			transform: translateY(0);
+			box-shadow: 0 1px 4px rgba(0, 119, 255, 0.4);
+		}
+	}
+}

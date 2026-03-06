@@ -1,0 +1,38 @@
+@use './variables' as *;
+@use "./fonts" as *;
+
+* {
+    font-family: "My Fucking Font", sans-serif; /* Всегда добавляй запасной шрифт */
+    box-sizing: border-box;
+	font-weight: bold;
+}
+
+html, body {
+	overscroll-behavior: none;
+}
+
+html {
+	height: 100%;
+	height: -webkit-fill-available;
+}
+
+body {
+	margin: 0px;
+	background-color: #2C2C34;
+	font-weight: 400;
+	min-height: 100%;
+	min-height: -webkit-fill-available;
+	min-height: 100dvh;
+	/* iOS safe area padding */
+	padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+p {
+	margin: 0;
+	padding: 0;
+}
+
+
+a {
+	text-decoration: none;
+}

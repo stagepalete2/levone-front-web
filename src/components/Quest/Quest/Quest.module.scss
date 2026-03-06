@@ -1,0 +1,119 @@
+@use '../../../styles/variables' as *;
+
+$purple-text: #C274E8; // Фиолетовый заголовок задания
+$text-white: #FFFFFF;
+$text-gray: #B0B0B5;
+$accent-yellow: #D1E335;
+$bg-hover: rgba(255, 255, 255, 0.05);
+
+.item {
+    display: flex;
+    align-items: center; // Выравнивание по центру по вертикали
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); // Тонкая линия разделитель
+    cursor: pointer;
+    transition: background-color 0.2s;
+    gap: 15px;
+    background-color: transparent; // Фон берется от родителя
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:active {
+        background-color: $bg-hover;
+    }
+
+    // --- Левая иконка (Баббл с кружком) ---
+    .iconContainer {
+        flex-shrink: 0;
+        
+        .bubbleIcon {
+            width: 32px;
+            height: 32px;
+            background-color: #6D6D75; // Серый фон (неактивный)
+            border-radius: 50% 50% 50% 4px; // Форма "капли" или баббла
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+
+            .circle {
+                width: 14px;
+                height: 14px;
+                background-color: #A0A0A5; // Светло-серый круг внутри
+                border-radius: 50%;
+            }
+
+            // Активное состояние (Желтый)
+            &.active {
+                background-color: #555; // Темная подложка
+
+                .circle {
+                    background-color: $accent-yellow; // Желтый круг
+                    box-shadow: 0 0 8px rgba(209, 227, 53, 0.6); // Свечение
+                }
+            }
+        }
+    }
+
+    // --- Центральный текст ---
+    .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        overflow: hidden;
+
+        .title {
+            margin: 0;
+            color: $dark-purple;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: 0.5px;
+        }
+
+        .description {
+            margin: 0;
+            color: $main-dark;
+            font-size: .8rem;
+            line-height: 1.3;
+            font-weight: 500;
+            // Обрезаем текст после 2 строк
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    }
+
+    // --- Правая награда ---
+    .rewardBadge {
+        flex-shrink: 0;
+        background-color: $main-lime;
+        border: 2px solid $secondary-lime;
+        border-radius: 8px;
+        padding: 4px 8px;
+        min-width: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        font-weight: 800;
+        font-size: 13px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        
+        span {
+            color: #222;
+        }
+
+        .star {
+            font-size: 12px;
+            margin-top: -1px; // Микро-коррекция
+        }
+    }
+}

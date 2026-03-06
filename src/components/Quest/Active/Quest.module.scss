@@ -1,0 +1,189 @@
+@use '../../../styles/variables' as *;
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    background-color: $secondary-bg;
+    border: 3px solid $light-purple;
+    width: 100%;
+    max-width: 360px;
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.closeBtn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    opacity: 0.8;
+    z-index: 5;
+}
+
+.headerTitle {
+    color: $main-dark;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    text-transform: uppercase;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.animationWrapper {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    z-index: 1;
+
+    .lottieAnim {
+        position: absolute;
+        width: 345px;
+        height: auto;
+    }
+}
+
+.whiteCard {
+    background-color: white;
+    border: 3px solid $secondary-gray;
+    width: 100%;
+    border-radius: 16px;
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+
+    z-index: 2;
+}
+
+.timerWrapper {
+    margin-bottom: 10px;
+    font-size: 25px;
+    div {
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+.description {
+    color: #333;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 1.4;
+    margin-bottom: 15px;
+}
+
+
+.inputContainer {
+    position: relative;
+    width: 100%;
+    background-color: $secondary-purple;
+    border-radius: 12px;
+    padding: 10px;
+    cursor: text;
+    overflow: hidden;
+    
+    transition: background-color 0.2s ease-in-out;
+    border: 3px solid $dark-purple;
+
+    &.error {
+        background-color: $main-error !important;
+        border: 3px solid red;
+    }
+}
+
+.hiddenInput {
+    position: absolute;
+    caret-color: transparent;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.visualLayer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    padding: 5px;
+}
+
+.label {
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    opacity: 0.9;
+}
+
+.pinGrid {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    width: 100%;
+}
+
+.pinCell {
+    width: 30px; 
+    height: 40px; 
+    border-bottom: 3px solid $main-dark;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+
+.shake {
+    animation: shake 0.4s ease-in-out;
+}
+
+.submitButton {
+    width: 100%;
+    padding: 15px;
+    border-radius: 25px;
+    background-color: $main-lime;
+    border: 3px solid $secondary-lime;
+    color: #2C2C34;
+    font-weight: 800;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.1s;
+
+    &:active {
+        transform: scale(0.98);
+    }
+
+    &:disabled {
+        opacity: 0.7;
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}

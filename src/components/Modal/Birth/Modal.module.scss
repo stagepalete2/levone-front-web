@@ -1,0 +1,288 @@
+// @use '../../../styles/variables' as *;
+
+// .overlay {
+// 	position: fixed;
+// 	inset: 0;
+// 	background-color: rgba(0, 0, 0, 0.75);
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: center;
+// 	z-index: 9999;
+// 	backdrop-filter: blur(4px);
+
+// 	.modal {
+// 		position: relative;
+// 		width: 90%;
+// 		max-width: 320px;
+// 		padding: 30px 20px;
+// 		background: $secondary-purple;
+// 		border-radius: 24px;
+// 		border: 3px solid $light-purple;
+// 		box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+// 		text-align: center;
+// 		display: flex;
+// 		flex-direction: column;
+// 		gap: 15px;
+
+// 		.closeButton {
+// 			position: absolute;
+// 			top: 15px;
+// 			right: 15px;
+// 			background: none;
+// 			border: none;
+// 			color: #fff;
+// 			font-size: 28px;
+// 			line-height: 1;
+// 			cursor: pointer;
+// 			opacity: 0.7;
+// 			&:hover { opacity: 1; }
+// 		}
+
+// 		.header {
+// 			.logotype {
+// 				width: 100px;
+// 				height: auto;
+// 			}
+// 		}
+
+// 		.body {
+// 			.title {
+// 				color: #fff;
+// 				font-size: 1.2rem;
+// 				font-weight: 800;
+// 				margin: 0;
+// 				text-transform: uppercase;
+// 			}
+
+// 			.subtitle {
+// 				color: rgba(255, 255, 255, 0.8);
+// 				font-size: 0.85rem;
+// 				margin-top: 5px;
+// 			}
+
+// 			.calendarWrapper {
+// 				background: rgba(0, 0, 0, 0.2);
+// 				border-radius: 16px;
+// 				margin: 15px 0;
+// 				display: flex;
+// 				justify-content: center;
+// 			}
+
+// 			.warning {
+// 				color: $main-dark;
+// 				font-size: 0.75rem;
+// 				margin-bottom: 15px;
+// 				font-weight: 500;
+// 			}
+
+// 			.submitButton {
+// 				padding: 14px;
+// 				width: 100%;
+// 				background: #d4e43e; // Желтый как на кнопке "ВЕРНУТЬСЯ"
+// 				color: #333;
+// 				border: none;
+// 				border-radius: 50px; // Скругленная кнопка
+// 				font-size: 1rem;
+// 				font-weight: 700;
+// 				cursor: pointer;
+// 				box-shadow: 0 4px 0 #b2c12d; // Небольшой эффект объема
+// 				transition: transform 0.1s;
+
+// 				&:active {
+// 					transform: translateY(2px);
+// 					box-shadow: none;
+// 				}
+// 			}
+// 		}
+// 	}
+// }
+@use '../../../styles/variables' as *;
+
+// Константы для барабана
+$item-height: 40px;
+$visible-items: 5;
+$picker-height: $item-height * $visible-items;
+
+.overlay {
+	position: fixed;
+	inset: 0;
+	background-color: rgba(0, 0, 0, 0.75);
+	// ✅ Оверлей скроллится сам — кнопка всегда достижима даже на iPhone SE
+	overflow-y: auto;
+	display: flex;
+	// ✅ flex-start вместо center — контент не обрезается снизу
+	align-items: flex-start;
+	justify-content: center;
+	// Внутренние отступы чтобы модал не прилипал к краям
+	padding: max(20px, env(safe-area-inset-top)) 0 max(20px, env(safe-area-inset-bottom));
+	box-sizing: border-box;
+	z-index: 9999;
+	backdrop-filter: blur(4px);
+
+	.modal {
+		// margin: auto центрирует по вертикали когда контент меньше экрана
+		margin: auto;
+		position: relative;
+		width: 90%;
+		max-width: 340px;
+		padding: 30px 20px;
+		background: $secondary-purple;
+		border-radius: 24px;
+		border: 3px solid $light-purple;
+		box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+
+		.header {
+			.logotype {
+				width: 100px;
+				height: auto;
+				display: block;
+				margin: 0 auto;
+				object-fit: contain;
+			}
+		}
+
+		.body {
+			.title {
+				color: #fff;
+				font-size: 1.2rem;
+				font-weight: 800;
+				margin: 0;
+				text-transform: uppercase;
+			}
+
+			.subtitle {
+				color: rgba(255, 255, 255, 0.8);
+				font-size: 0.85rem;
+				margin-top: 5px;
+			}
+
+			// --- Стили колеса выбора ---
+			.pickerWrapper {
+				position: relative;
+				height: $picker-height;
+				background: rgba(0, 0, 0, 0.2);
+				border-radius: 16px;
+				margin: 20px 0;
+				display: flex;
+				justify-content: center;
+				overflow: hidden;
+				// Эффект затухания сверху и снизу
+				mask-image: linear-gradient(
+					to bottom,
+					transparent 0%,
+					black 20%,
+					black 80%,
+					transparent 100%
+				);
+				-webkit-mask-image: linear-gradient(
+					to bottom,
+					transparent 0%,
+					black 20%,
+					black 80%,
+					transparent 100%
+				);
+
+				.highlightBar {
+					position: absolute;
+					top: 50%;
+					left: 0;
+					right: 0;
+					height: $item-height;
+					transform: translateY(-50%);
+					background: rgba(255, 255, 255, 0.1);
+					border-top: 1px solid rgba(255, 255, 255, 0.2);
+					border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+					pointer-events: none;
+					z-index: 2;
+				}
+
+				.wheelColumn {
+					flex: 1;
+					height: 100%;
+					position: relative;
+					z-index: 1;
+					overflow: hidden;
+
+					// Расширяем колонку с месяцем
+					&:nth-child(3) {
+						flex: 1.5;
+					}
+
+					.scrollContainer {
+						height: 100%;
+						overflow-x: hidden;
+						overflow-y: scroll;
+						// ❌ УБРАНО: scroll-snap-type: y mandatory; — конфликтовало с JS снаппингом
+						// и делало первые/последние элементы недоступными
+						overscroll-behavior: contain;
+						touch-action: pan-y;
+						-webkit-overflow-scrolling: touch;
+						scrollbar-width: none;
+
+						&::-webkit-scrollbar {
+							display: none;
+						}
+
+						.wheelItem {
+							height: $item-height;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							// ❌ УБРАНО: scroll-snap-align: start; — не нужно без scroll-snap-type
+							color: rgba(255, 255, 255, 0.4);
+							font-size: 0.95rem;
+							font-weight: 500;
+							transition: color 0.2s ease, font-weight 0.2s ease;
+							cursor: pointer;
+							user-select: none;
+							-webkit-user-select: none;
+							white-space: nowrap;
+
+							&.selected {
+								color: #fff;
+								font-size: 1.05rem;
+								font-weight: 700;
+							}
+						}
+
+						// Пустые блоки сверху и снизу для центровки первого/последнего элемента
+						.paddingItem {
+							height: calc(($picker-height - $item-height) / 2);
+							flex-shrink: 0;
+						}
+					}
+				}
+			}
+
+			.warning {
+				color: $main-dark;
+				font-size: 0.75rem;
+				margin-bottom: 15px;
+				font-weight: 500;
+			}
+
+			.submitButton {
+				padding: 14px;
+				width: 100%;
+				background: #d4e43e;
+				color: #333;
+				border: none;
+				border-radius: 50px;
+				font-size: 1rem;
+				font-weight: 700;
+				cursor: pointer;
+				box-shadow: 0 4px 0 #b2c12d;
+				transition: transform 0.1s;
+
+				&:active {
+					transform: translateY(2px);
+					box-shadow: none;
+				}
+			}
+		}
+	}
+}

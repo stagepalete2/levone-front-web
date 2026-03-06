@@ -1,0 +1,158 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+$bg-dark: #2C2C34;
+$card-bg: #44444D;
+$purple-header: #C274E8;
+$accent-yellow: #D1E335;
+$text-white: #FFFFFF;
+
+.wrap {
+    @include flexCenter(column);
+	@include wrapContainer();
+
+    box-sizing: border-box;
+    position: relative;
+
+    // Обертка для активного квеста
+    .activeQuestWrapper {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+    }
+
+    .balanceRow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 0 5px;
+        margin-top: 20px;
+
+        position: relative;
+        z-index: 1;
+
+        .label {
+            color: $main-dark;
+            font-weight: 800;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .badge {
+            background-color: $main-lime;
+            border: 3px solid $secondary-lime;
+            border-radius: 12px;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            
+            font-weight: 800;
+            font-size: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+
+            span {
+                color: #222;
+            }
+
+            .icon {
+                font-size: 18px;
+            }
+        }
+    }
+
+    // Большая карточка списка
+    .questCard {
+        width: 100%;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        
+        position: relative;
+        z-index: 1;
+
+        .cardHeader {
+            background-color: transparent; 
+            position: relative;
+            z-index: 2; 
+            
+            display: flex;
+            justify-content: center;
+            
+            .innerHeader {
+                border-radius: 10px; 
+            
+                background-color: $secondary-purple;
+                border: 2px solid $dark-purple;
+                
+                padding: 15px 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                width: 100%;
+                
+                // Тень, чтобы отделить шапку от тела (эффект наложения)
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    // ...
+
+                .headerIcon {
+                    display: flex;
+                    align-items: center;
+                    color: white;
+
+                    img {
+                        width: 26px;
+                        height: 26px;
+                    }
+                }
+    
+                .headerTitle {
+                    color: white;
+                    font-weight: 800;
+                    font-size: 18px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+            }
+
+        }
+
+        .cardBody {
+            background-color: $secondary-bg;
+            border: 2px solid $light-purple;
+            
+            // ВОЗВРАЩАЕМ border-top, так как тело теперь самостоятельный блок
+            border-top: 2px solid $light-purple; 
+            
+            // Скругляем все углы у тела
+            border-radius: 10px; 
+
+            display: flex;
+            flex-direction: column;
+            min-height: 200px;
+            
+            // ГЛАВНЫЙ ТРЮК:
+            // Тянем блок вверх на половину высоты шапки (подберите число под себя)
+            margin-top: -25px; 
+            
+            // Добавляем отступ внутри сверху, чтобы текст не прилип к наехавшей шапке
+            padding-top: 35px; 
+            padding-bottom: 10px;
+            
+            position: relative;
+            z-index: 1; // Тело лежит ПОД шапкой
+        }
+
+        .emptyState {
+            padding: 40px;
+            text-align: center;
+            color: rgba(255,255,255, 0.5);
+            font-size: 16px;
+        }
+    }
+}

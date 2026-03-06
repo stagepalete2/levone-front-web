@@ -1,0 +1,128 @@
+
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.gameWrap {
+	padding: 0px 1.5rem 1.5rem 1.5rem!important;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-top: 1rem;
+	color: white;
+
+	/* 🧱 Take full viewport height and lock it */
+	overflow: hidden; /* disable scrolling */
+
+	/* 🚫 Prevent iOS rubber-band overscroll */
+	overscroll-behavior: none;
+	-webkit-overflow-scrolling: auto;
+
+	/* 🎨 Style */
+	background-color: $primaryColorBlack;
+	touch-action: none; /* optional: blocks elastic touch panning */
+
+	.card {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		font-size: 35px;
+
+		@media (min-width: 768px) {
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		gap: 1rem;
+		background-color: rgba(0, 0, 0, 0.5); // bg-dark bg-opacity-50
+		border: 1px solid rgba(255, 255, 255, 0.1); // border-light border-opacity-10
+		border-radius: 0.75rem; // rounded-3
+		padding: 1rem;
+
+		.timer {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.stats {
+			font-size: 1.25rem; // small
+			color: rgba(255, 255, 255, 0.5);
+
+			span {
+				font-weight: 700; // fw-bold
+				color: white;
+			}
+		}
+	}
+
+	.grid {
+		margin-top: 1rem;
+		margin-bottom: 1.5rem;
+
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 0.75rem; // matches g-3
+
+		.cell {
+		display: flex;
+		justify-content: center;
+		}
+	}
+}
+
+
+.gameCard {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 100%;
+	max-width: 120px;
+	aspect-ratio: 1 / 1;
+
+	font-size: clamp(2rem, 4vw, 3rem);
+	font-weight: 600;
+	padding: 3px;
+	border-radius: 0.75rem; // rounded-3
+	border-width: 1px;
+	transition: all 0.4s ease;
+	box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15); // shadow-sm
+
+	// Default (hidden card)
+	background-color: #000;
+	color: white;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+
+	&.visible {
+		background-color: #f8f9fa; // bg-light
+		color: #212529; // text-dark
+	}
+
+	&.matched {
+		border-color: #198754; // border-success
+		box-shadow: 0 0 1rem rgba(25, 135, 84, 0.4); // shadow-lg
+	}
+
+	&:disabled {
+		opacity: 0.7;
+		cursor: not-allowed;
+	}
+
+	.content {
+		transition: opacity 0.4s ease;
+		opacity: 0;
+		&.visible {
+		opacity: 1;
+		}
+	}
+
+	.overlay {
+		position: absolute;
+		inset: 0;
+		border-radius: 0.75rem;
+		background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.1), transparent);
+		pointer-events: none;
+	}
+}

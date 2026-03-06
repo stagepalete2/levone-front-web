@@ -1,0 +1,10 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.wrap {
+  @include flexCenter(column);
+  padding: 0px 1.5rem 1.5rem 1.5rem!important;
+  height: 100vh;
+  text-align: center;
+  background-color: #000; // если нужно затемнить фон
+}

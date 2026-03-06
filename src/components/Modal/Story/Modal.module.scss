@@ -1,0 +1,144 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// Переопределим или добавим локальные переменные, если их нет в variables
+$bg-modal: #2C2C33;
+$accent-yellow: #D1E335;
+$text-white: #FFFFFF;
+$text-gray: #999999;
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+    
+    overflow: hidden;
+    pointer-events: all;
+    touch-action: none;
+    user-select: none;
+
+    .modal {
+        position: relative;
+        width: 100%;
+        max-width: 340px;
+        background-color: $secondary-bg;
+        border: 3px solid $main-purple;
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 24px 24px 24px;
+        text-align: center;
+
+        .closeIconBtn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+
+            &:active {
+                background: rgba(255, 255, 255, 0.2);
+            }
+            
+            svg path {
+                stroke: $dark-purple;
+            }
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 800;
+            color: $main-dark;
+            text-transform: uppercase;
+            margin: 0 0 10px 0;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            font-weight: 800;
+            color: $main-dark;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+
+        // Иконка по центру
+        .illustration {
+            margin-bottom: 30px;
+            position: relative;
+            
+            .iconCircle {
+                width: 90px;
+                height: 90px;
+                background: radial-gradient(circle, rgba(209, 227, 53, 0.15) 0%, rgba(44, 44, 51, 0) 70%);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                img {
+                    width: 60px;
+                    height: 60px;
+                    object-fit: contain;
+                    // Если иконка черная, можно инвертировать, если нужно
+                    // filter: brightness(0) invert(1); 
+                }
+            }
+        }
+
+        .actions {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            .button {
+                width: 100%;
+                border: none;
+                border-radius: 16px;
+                font-family: inherit;
+                cursor: pointer;
+                text-transform: uppercase;
+                font-weight: 800;
+                transition: transform 0.1s, opacity 0.2s;
+
+                &:active {
+                    transform: scale(0.98);
+                }
+
+                &.unlock {
+                    background-color: $main-lime;
+                    border: 3px solid $secondary-lime;
+                    color: #1F1F1F;
+                    padding: 18px;
+                    font-size: 16px;
+                    box-shadow: 0 4px 15px rgba(209, 227, 53, 0.3);
+                }
+
+                &.close {
+                    background: transparent;
+                    color: $main-dark!important;
+                    padding: 12px;
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+}

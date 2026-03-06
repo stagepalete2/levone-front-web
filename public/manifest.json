@@ -1,0 +1,14 @@
+{
+  "short_name": "Levone",
+  "name": "Levone",
+  "icons": [
+    {
+      "src": "/LevCoin.png",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}
