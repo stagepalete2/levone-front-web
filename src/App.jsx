@@ -35,17 +35,15 @@ function App() {
     const init = async () => {
       try {
         // 1. Check if returning from OAuth redirect
-        const callbackAuth = checkOAuthCallback()
-        if (callbackAuth) {
-          const vkUser = await getVkUserInfo(callbackAuth.access_token)
-          if (vkUser) {
-            setAuth({ vkToken: callbackAuth.access_token, vkUser })
-            setInitDone(true)
-            return
-          }
+        // checkOAuthCallback saves auth to sessionStorage and triggers
+        // a page reload with the correct hash — if it returns 'redirecting',
+        // we stop processing (page is about to reload)
+        const callbackResult = checkOAuthCallback()
+        if (callbackResult === 'redirecting') {
+          return // Page is reloading, don't continue
         }
 
-        // 2. Check for saved session
+        // 2. Check for saved session (covers both popup and redirect flows)
         const savedAuth = loadAuthData()
         if (savedAuth?.access_token) {
           try {

@@ -53,7 +53,7 @@ const Modal = ({ prize, isDemo, onClose }) => {
 		if (isDemo) {
 			setIsAuthLoading(true)
 			try {
-				const authData = await loginWithVk({ scope: 'friends,groups' })
+				const authData = await loginWithVk({ scope: 'groups' })
 				if (authData?.access_token) {
 					const vkUser = await getVkUserInfo(authData.access_token)
 					if (vkUser) {
@@ -129,7 +129,7 @@ const Modal = ({ prize, isDemo, onClose }) => {
 							textAlign: 'center',
 							marginTop: 8
 						}}>
-							Для получения приза войдите через ВКонтакте
+							Авторизация через ВКонтакте — быстро и безопасно
 						</p>
 					)}
 				</div>

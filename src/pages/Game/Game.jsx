@@ -94,6 +94,7 @@ const Game = () => {
 	const vkUser = useAuth((state) => state.vkUser)
 
 	const [showBirthdayModal, setShowBirthdayModal] = useState(false)
+	const [birthModalShown, setBirthModalShown] = useState(false)
 
 	useEffect(() => {
 		if (hasShownPostStory || !client || !cooldown) return;
@@ -114,21 +115,23 @@ const Game = () => {
 
 	// Birth date modal — only for authenticated users who don't have birth_date
 	// and only if VK profile also doesn't have bdate (auto-saved during init)
+	// Track birthModalShown so "Пропустить" prevents re-appearing
 	useEffect(() => {
 		if (!isAuthenticated || !client || !branch) return;
+		if (birthModalShown) return; // Already shown this session
 
 		if (!client.birth_date) {
 			// Show birth date modal with skip button after a short delay
-			// This happens only after auth+prize claim flow
 			const timer = setTimeout(() => {
 				pushModal({
 					pageId: PAGE_ID,
 					modal: { type: 'birth' }
 				})
+				setBirthModalShown(true)
 			}, 500)
 			return () => clearTimeout(timer)
 		}
-	}, [client, branch, isAuthenticated])
+	}, [client, branch, isAuthenticated, birthModalShown])
 
 	
 

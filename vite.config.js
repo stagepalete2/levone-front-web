@@ -9,7 +9,7 @@ export default defineConfig({
     host: true,
     port: 3000,
 
-    allowedHosts: ['.ngrok-free.app', 'tunnel.levoneapp.ru'],
+    allowedHosts: ['.ngrok-free.app', 'tunnel.levoneapp.ru', 'loyalupp.ru'],
 
     hmr: {
       protocol: 'wss',
@@ -24,7 +24,7 @@ export default defineConfig({
   },
 
   build: {
-    outDir: 'build', // matches vk-hosting-config.json
+    outDir: 'build',
   },
 
   esbuild: {
