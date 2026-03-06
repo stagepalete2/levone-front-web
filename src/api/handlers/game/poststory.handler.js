@@ -16,7 +16,7 @@ const usePostStory = () => {
 			// On website, we can't use VK Story Box.
 			// Open VK share dialog instead.
 			const shareUrl = `${window.location.origin}${window.location.pathname}#/?company=${company}&branch=${branch}&is_referral=true&from=${client.id}`
-			const vkShareUrl = `https://vk.com/share.php?url=${encodeURIComponent(shareUrl)}&image=${encodeURIComponent(image)}`
+			const vkShareUrl = `https://vk.ru/share.php?url=${encodeURIComponent(shareUrl)}&image=${encodeURIComponent(image)}`
 
 			const shareWindow = window.open(vkShareUrl, '_blank', 'width=600,height=400')
 

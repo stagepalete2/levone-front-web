@@ -38,7 +38,7 @@ function App() {
         // checkOAuthCallback saves auth to sessionStorage and triggers
         // a page reload with the correct hash — if it returns 'redirecting',
         // we stop processing (page is about to reload)
-        const callbackResult = checkOAuthCallback()
+        const callbackResult = await checkOAuthCallback()
         if (callbackResult === 'redirecting') {
           return // Page is reloading, don't continue
         }

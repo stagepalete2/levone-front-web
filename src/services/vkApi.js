@@ -27,7 +27,7 @@ export function vkApiCall(method, params = {}) {
 			.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
 			.join('&')
 
-		script.src = `https://api.vk.com/method/${method}?${queryString}`
+		script.src = `https://api.vk.ru/method/${method}?${queryString}`
 
 		const cleanup = () => {
 			delete window[callbackName]

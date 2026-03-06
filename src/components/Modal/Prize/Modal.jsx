@@ -3,8 +3,7 @@ import { createPortal } from 'react-dom'
 import { useState } from 'react'
 import useWindowSize from '../../../hooks/useWindowSize'
 import { useAuth, useLogo, useModal } from '../../../zustand'
-import { loginWithVk, parseVkBdate, saveAuthData } from '../../../services/vkAuth'
-import { getVkUserInfo } from '../../../services/vkApi'
+import { loginWithVk } from '../../../services/vkAuth'
 import styles from './Modal.module.scss'
 import { useEffect } from 'react'
 
@@ -49,37 +48,17 @@ const Modal = ({ prize, isDemo, onClose }) => {
 	const currentPrize = prizes[prize.type]
 
 	const handleClaim = async () => {
-		// If this is a demo play (unauthenticated), trigger VK OAuth first
+		// If this is a demo play (unauthenticated), trigger VK ID auth
 		if (isDemo) {
 			setIsAuthLoading(true)
 			try {
-				const authData = await loginWithVk({ scope: 'groups' })
-				if (authData?.access_token) {
-					const vkUser = await getVkUserInfo(authData.access_token)
-					if (vkUser) {
-						saveAuthData(authData)
-						setAuth({ vkToken: authData.access_token, vkUser })
-
-						// Check if VK profile has birth date
-						const parsedBdate = parseVkBdate(vkUser.bdate)
-
-						// Close prize modal — App.jsx will re-render and load data
-						// After data loads, birth modal will show if needed (no bdate)
-						if (!parsedBdate) {
-							// No birth date — birth modal will be shown by Game.jsx
-							// (but now with skip button)
-						}
-						// If has bdate — it will be saved automatically during init
-
-						onClose()
-						// Force page reload to trigger full data initialization
-						window.location.reload()
-						return
-					}
-				}
+				// loginWithVk() делает redirect на VK ID — страница уходит.
+				// После авторизации VK вернёт на сайт, 
+				// App.jsx → checkOAuthCallback() обработает токен.
+				await loginWithVk()
+				// Сюда код не дойдёт — страница уже ушла на VK
 			} catch (err) {
 				console.error('VK auth error:', err)
-			} finally {
 				setIsAuthLoading(false)
 			}
 			return
