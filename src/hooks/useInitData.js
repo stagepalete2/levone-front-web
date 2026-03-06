@@ -24,10 +24,12 @@ import useInitParams from './useInitParams'
 import { parseVkBdate } from '../services/vkAuth'
 
 const useInitData = () => {
-	const [isLoading, setIsLoading] = useState(true)
+	const [isLoading, setIsLoading] = useState(false)
 	const [isParamsLoaded, setIsParamsLoaded] = useState(false)
 	const [isInviteLink, setIsInviteLink] = useState(false)
 	const [isEmployee, setIsEmployee] = useState(false)
+	const [initError, setInitError] = useState(null)
+	const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false) // true после первого вызова loadData
 
 	// Params & Handlers
 	const { company, branch, table, is_referral, delivery, from, birthday } = useInitParams()
@@ -67,12 +69,21 @@ const useInitData = () => {
 	}, [delivery, is_referral, isInviteLink])
 
 	const loadData = useCallback(async () => {
+		setHasAttemptedLoad(true)
+
 		if (!company || !branch) {
+			console.warn('[InitData] Missing params! company:', company, 'branch:', branch,
+				'URL hash:', window.location.hash,
+				'localStorage:', localStorage.getItem('levone_init_params'))
+			setInitError('Не удалось определить заведение. Попробуйте перейти по ссылке заново.')
 			setIsLoading(false)
 			return
 		}
 
+		console.log('[InitData] Loading data for company:', company, 'branch:', branch)
+
 		setIsLoading(true)
+		setInitError(null)
 
 		try {
 			// 1. Получаем Компанию
@@ -227,8 +238,10 @@ const useInitData = () => {
 			}
 
 		} catch (error) {
-			console.error("Critical Init Error:", error)
+			console.error("Critical Init Error:", error?.message || error,
+				'| company:', company, 'branch:', branch)
 			setIsParamsLoaded(false)
+			setInitError(`Ошибка загрузки: ${error?.message || 'Проверьте соединение'}`)
 		} finally {
 			setIsLoading(false)
 		}
@@ -242,7 +255,7 @@ const useInitData = () => {
 		getClient, checkIsJoinedCommunity
 	])
 
-	return { isLoading, isParamsLoaded, isInviteLink, isEmployee, loadData }
+	return { isLoading, isParamsLoaded, isInviteLink, isEmployee, initError, hasAttemptedLoad, loadData }
 }
 
 export default useInitData

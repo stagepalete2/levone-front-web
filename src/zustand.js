@@ -14,9 +14,17 @@ export const useAuth = create((set) => ({
 }))
 
 
+/**
+ * Strip protocol from domain so endpoints can safely use `https://${domain}/...`
+ */
+function normalizeDomain(d) {
+  if (!d) return d
+  return d.replace(/^https?:\/\//, '').replace(/\/+$/, '')
+}
+
 export const useCompany = create((set) => ({
-  domain: import.meta.env.VITE_BACKEND_DOMAIN,
-  setCompany: (newDomain) => set(() => ({ domain: newDomain }))
+  domain: normalizeDomain(import.meta.env.VITE_BACKEND_DOMAIN),
+  setCompany: (newDomain) => set(() => ({ domain: normalizeDomain(newDomain) }))
 }))
 
 export const useParams = create((set) => ({

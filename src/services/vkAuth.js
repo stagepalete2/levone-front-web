@@ -61,17 +61,27 @@ export function saveAuthData(data) {
 	try {
 		sessionStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(data))
 	} catch (e) {
-		console.warn('[VK Auth] Failed to save auth data:', e)
+		console.warn('[VK Auth] Failed to save auth data to session:', e)
+	}
+	try {
+		localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(data))
+	} catch (e) {
+		console.warn('[VK Auth] Failed to save auth data to local:', e)
 	}
 }
 
 export function loadAuthData() {
 	try {
-		const stored = sessionStorage.getItem(AUTH_STORAGE_KEY)
+		// Пробуем sessionStorage, потом localStorage
+		let stored = sessionStorage.getItem(AUTH_STORAGE_KEY)
+		if (!stored) {
+			stored = localStorage.getItem(AUTH_STORAGE_KEY)
+		}
 		if (!stored) return null
 		const data = JSON.parse(stored)
 		if (data.expires_at && Date.now() > data.expires_at) {
 			sessionStorage.removeItem(AUTH_STORAGE_KEY)
+			localStorage.removeItem(AUTH_STORAGE_KEY)
 			return null
 		}
 		return data
@@ -82,6 +92,7 @@ export function loadAuthData() {
 
 export function clearAuthData() {
 	sessionStorage.removeItem(AUTH_STORAGE_KEY)
+	try { localStorage.removeItem(AUTH_STORAGE_KEY) } catch(e) {}
 }
 
 // ============ OAuth Callback ============
@@ -135,8 +146,13 @@ export async function checkOAuthCallback() {
 		saveAuthData(authData)
 
 		// Восстанавливаем оригинальный hash (company, branch, table)
-		const savedHash = sessionStorage.getItem('levone_pre_auth_hash')
+		// Пробуем sessionStorage, потом localStorage (fallback для VK WebView)
+		let savedHash = sessionStorage.getItem('levone_pre_auth_hash')
+		if (!savedHash) {
+			try { savedHash = localStorage.getItem('levone_pre_auth_hash') } catch(e) {}
+		}
 		sessionStorage.removeItem('levone_pre_auth_hash')
+		try { localStorage.removeItem('levone_pre_auth_hash') } catch(e) {}
 
 		const cleanUrl =
 			window.location.origin +
@@ -165,7 +181,10 @@ export async function checkOAuthCallback() {
  */
 export async function loginWithVk(options = {}) {
 	// Сохраняем текущий hash (чтобы вернуться после авторизации)
-	sessionStorage.setItem('levone_pre_auth_hash', window.location.hash)
+	// Дублируем в localStorage — sessionStorage ненадёжен в VK WebView
+	const currentHash = window.location.hash
+	sessionStorage.setItem('levone_pre_auth_hash', currentHash)
+	try { localStorage.setItem('levone_pre_auth_hash', currentHash) } catch(e) {}
 
 	ensureVkidInit()
 

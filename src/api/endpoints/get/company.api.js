@@ -1,9 +1,11 @@
 
 import axios from 'axios'
+import { useCompany } from '../../../zustand'
 
 const getCompany = async ({ company }) => {
+    const domain = useCompany.getState().domain
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_DOMAIN}/api/v1/company/`, { params: { company } });
+      const response = await axios.get(`https://${domain}/api/v1/company/`, { params: { company } });
       return response.data;
     } catch (error) {
       if (error.response) {

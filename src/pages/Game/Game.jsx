@@ -84,6 +84,7 @@ const Intro = () => {
 
 const Game = () => {
 	const view = useView((state) => state.view)
+	const setView = useView((state) => state.setView)
 	const client = useClient((state) => state.client)
 	const branch = useParams((state) => state.branch)
 	const cooldown = useGameCooldown((state) => state.gameCooldown)
@@ -95,6 +96,13 @@ const Game = () => {
 
 	const [showBirthdayModal, setShowBirthdayModal] = useState(false)
 	const [birthModalShown, setBirthModalShown] = useState(false)
+
+	// Для неавторизованных — сразу показываем ракету, без intro
+	useEffect(() => {
+		if (!isAuthenticated && view === 'intro') {
+			setView('game')
+		}
+	}, [isAuthenticated, view, setView])
 
 	useEffect(() => {
 		if (hasShownPostStory || !client || !cooldown) return;

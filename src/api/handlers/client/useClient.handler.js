@@ -14,17 +14,17 @@ const useClientHandler = () => {
 				return
 			}
 
-			console.log(vkUser)
+			console.log('[Client] vkUser:', vkUser)
 
 			const client = await postClient({
-				vk_user_id: vkUser.id,
+				vk_user_id: Number(vkUser.id),
 				branch: branch,
-				name: vkUser.first_name,
-				lastname: vkUser.last_name,
-				sex: vkUser.sex
+				name: vkUser.first_name || 'User',
+				lastname: vkUser.last_name || '',
+				sex: vkUser.sex != null ? Number(vkUser.sex) : 0
 			})
 
-			console.log(client)
+			console.log('[Client] response:', client)
 
 			if (client) {
 				setClient(client)
@@ -32,7 +32,7 @@ const useClientHandler = () => {
 
 			return client
 		} catch (error) {
-			console.log(error)
+			console.error('[Client] getClient error:', error)
 		}
 	}
 

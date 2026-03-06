@@ -26,6 +26,7 @@ const Rocket = () => {
     const branch = useParams((state) => state.branch);
     const client = useClient((state) => state.client);
     const setView = useView((state) => state.setView);
+    const isAuthenticated = useAuth((state) => state.isAuthenticated);
 
     const { fetchGameResult, processGameResult } = usePlayGame();
 
@@ -192,6 +193,13 @@ const Rocket = () => {
                     />
                 ))}
             </div>
+
+            {/* Auth CTA для неавторизованных */}
+            {!isAuthenticated && (
+                <div className={styles.authBanner}>
+                    Авторизуйтесь через ВКонтакте, чтобы забрать приз, открыть магазин подарков и начать копить бонусы!
+                </div>
+            )}
 
             <div className={styles.altitudeDisplay}>
                 <div className={`${styles.altitudeValue} ${displayAltitude % 200 === 0 && displayAltitude > 0 ? styles.boost : ''}`}>
