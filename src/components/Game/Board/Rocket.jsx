@@ -60,7 +60,7 @@ const Rocket = () => {
         if (!isAuthed) {
             const demoResponse = {
                 type: 'prize',
-                reward: { id: 'demo', name: 'Супер Приз' },
+                reward: { id: 'demo', name: 'Приз' },
                 _isDemo: true, // marker for processGameResult
             };
             runFlightAnimation(1500, demoResponse);
@@ -193,13 +193,6 @@ const Rocket = () => {
                     />
                 ))}
             </div>
-
-            {/* Auth CTA для неавторизованных */}
-            {!isAuthenticated && (
-                <div className={styles.authBanner}>
-                    Авторизуйтесь через ВКонтакте, чтобы забрать приз, открыть магазин подарков и начать копить бонусы!
-                </div>
-            )}
 
             <div className={styles.altitudeDisplay}>
                 <div className={`${styles.altitudeValue} ${displayAltitude % 200 === 0 && displayAltitude > 0 ? styles.boost : ''}`}>

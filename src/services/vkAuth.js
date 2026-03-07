@@ -1,28 +1,77 @@
 /**
  * VK ID OAuth 2.1 Service (через @vkid/sdk v2.6+)
  * 
- * SDK сам управляет:
- *   - PKCE (code_verifier хранится в cookie, переживает redirect)
- *   - Обмен code → access_token (через fetch на id.vk.ru/oauth2/auth)
- *   - Все домены уже .vk.ru
+ * ВАЖНО: SDK v2.6 имеет баг — не сохраняет code_verifier в cookie.
+ * Поэтому мы сами генерируем state + codeVerifier, сохраняем в localStorage,
+ * и передаём в Config.init при каждой инициализации.
  * 
  * Поток:
- *   1. VKID Config.init() — инициализация с app_id и redirectUrl
- *   2. VKID Auth.login() — redirect на id.vk.ru/authorize
- *   3. Юзер авторизуется
- *   4. VK редиректит на redirect_uri?code=...&device_id=...&state=...
- *   5. VKID Auth.exchangeCode(code, device_id) — обмен на access_token
- *   6. Токен сохраняется, юзер-инфо запрашивается через api.vk.ru
+ *   1. Генерируем state + codeVerifier, сохраняем в localStorage
+ *   2. VKID Config.init() с app_id, redirectUrl, state, codeVerifier
+ *   3. VKID Auth.login() — redirect на id.vk.ru/authorize
+ *   4. Юзер авторизуется
+ *   5. VK редиректит на redirect_uri?code=...&device_id=...&state=...
+ *   6. Восстанавливаем codeVerifier из localStorage
+ *   7. Config.init() с тем же codeVerifier → Auth.exchangeCode()
+ *   8. Токен сохраняется
  */
 
 import { Auth, Config, ConfigAuthMode } from '@vkid/sdk'
 
 const VK_APP_ID = parseInt(import.meta.env.VITE_VK_APP_ID || '54473505')
 
-// Storage key
+// Storage keys
 const AUTH_STORAGE_KEY = 'levone_vk_auth'
+const PKCE_STORAGE_KEY = 'levone_vk_pkce'
 
 let vkidInitialized = false
+let lastCodeVerifier = null
+
+// ============ PKCE Helpers ============
+
+/**
+ * Генерация случайной строки для state / codeVerifier
+ */
+function generateRandomString(length = 64) {
+	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~'
+	const array = new Uint8Array(length)
+	crypto.getRandomValues(array)
+	return Array.from(array, byte => chars[byte % chars.length]).join('')
+}
+
+/**
+ * Сохранить PKCE данные (state + codeVerifier) в localStorage
+ */
+function savePkceData(state, codeVerifier) {
+	const data = { state, codeVerifier, ts: Date.now() }
+	try { localStorage.setItem(PKCE_STORAGE_KEY, JSON.stringify(data)) } catch(e) {}
+	try { sessionStorage.setItem(PKCE_STORAGE_KEY, JSON.stringify(data)) } catch(e) {}
+}
+
+/**
+ * Загрузить PKCE данные из localStorage
+ */
+function loadPkceData() {
+	try {
+		let stored = localStorage.getItem(PKCE_STORAGE_KEY)
+		if (!stored) stored = sessionStorage.getItem(PKCE_STORAGE_KEY)
+		if (!stored) return null
+		const data = JSON.parse(stored)
+		// PKCE данные действительны 10 минут
+		if (Date.now() - data.ts > 10 * 60 * 1000) {
+			clearPkceData()
+			return null
+		}
+		return data
+	} catch(e) {
+		return null
+	}
+}
+
+function clearPkceData() {
+	try { localStorage.removeItem(PKCE_STORAGE_KEY) } catch(e) {}
+	try { sessionStorage.removeItem(PKCE_STORAGE_KEY) } catch(e) {}
+}
 
 // ============ Init ============
 
@@ -37,22 +86,34 @@ function getRedirectUri() {
 
 /**
  * Инициализация VK ID SDK.
- * Должна вызываться ДО login() и exchangeCode().
- * Безопасно вызывать несколько раз — повторно не инициализирует.
+ * Каждый раз передаём state и codeVerifier.
+ * @param {string|null} codeVerifier — если передан, используем его (для callback)
+ * @param {string|null} state — если передан, используем его
  */
-function ensureVkidInit() {
-	if (vkidInitialized) return
-
+function initVkid(codeVerifier, state) {
 	const redirectUri = getRedirectUri()
 
-	Config.init({
+	const initParams = {
 		app: VK_APP_ID,
 		redirectUrl: redirectUri,
 		mode: ConfigAuthMode.Redirect,
-	})
+	}
+
+	if (state) {
+		initParams.state = state
+	}
+	if (codeVerifier) {
+		initParams.codeVerifier = codeVerifier
+	}
+
+	// Сбрасываем флаг — SDK нужно переинициализировать с новыми PKCE параметрами
+	vkidInitialized = false
+
+	Config.init(initParams)
 
 	vkidInitialized = true
-	console.log('[VK Auth] SDK init OK — app:', VK_APP_ID, 'redirect:', redirectUri)
+	lastCodeVerifier = codeVerifier
+	console.log('[VK Auth] SDK init OK — app:', VK_APP_ID, 'redirect:', redirectUri, 'state:', state ? 'yes' : 'no', 'codeVerifier:', codeVerifier ? 'yes' : 'no')
 }
 
 // ============ Auth Data Storage ============
@@ -121,18 +182,26 @@ export async function checkOAuthCallback() {
 
 	console.log('[VK Auth] Callback detected — exchanging code for token...')
 
-	ensureVkidInit()
+	// Восстанавливаем codeVerifier, сохранённый перед redirect
+	const pkceData = loadPkceData()
+	if (!pkceData?.codeVerifier) {
+		console.error('[VK Auth] No saved codeVerifier found! PKCE will fail.')
+	}
+
+	// Инициализируем SDK с тем же codeVerifier, что был при login()
+	initVkid(pkceData?.codeVerifier || null, pkceData?.state || null)
 
 	try {
-		// SDK берёт code_verifier из cookie (сохранён при login())
 		const tokenData = await Auth.exchangeCode(code, deviceId)
 
 		if (!tokenData || !tokenData.access_token) {
 			console.error('[VK Auth] exchangeCode failed:', tokenData)
+			clearPkceData()
 			return null
 		}
 
 		console.log('[VK Auth] Token OK, user_id:', tokenData.user_id)
+		clearPkceData()
 
 		const authData = {
 			access_token: tokenData.access_token,
@@ -165,6 +234,7 @@ export async function checkOAuthCallback() {
 
 	} catch (err) {
 		console.error('[VK Auth] exchangeCode error:', err)
+		clearPkceData()
 		return null
 	}
 }
@@ -174,10 +244,10 @@ export async function checkOAuthCallback() {
 /**
  * Запуск авторизации через VK ID.
  * 
- * SDK сам:
- *   - Генерирует code_verifier, сохраняет в cookie
- *   - Формирует URL с code_challenge
- *   - Делает location.assign() на VK ID
+ * 1. Генерируем state + codeVerifier
+ * 2. Сохраняем в localStorage (переживает redirect)
+ * 3. Инициализируем SDK с этими параметрами
+ * 4. Auth.login() → redirect на VK ID
  */
 export async function loginWithVk(options = {}) {
 	// Сохраняем текущий hash (чтобы вернуться после авторизации)
@@ -186,9 +256,15 @@ export async function loginWithVk(options = {}) {
 	sessionStorage.setItem('levone_pre_auth_hash', currentHash)
 	try { localStorage.setItem('levone_pre_auth_hash', currentHash) } catch(e) {}
 
-	ensureVkidInit()
+	// Генерируем PKCE параметры и сохраняем
+	const state = generateRandomString(32)
+	const codeVerifier = generateRandomString(64)
+	savePkceData(state, codeVerifier)
 
-	console.log('[VK Auth] Starting login...')
+	// Инициализируем SDK с нашими PKCE параметрами
+	initVkid(codeVerifier, state)
+
+	console.log('[VK Auth] Starting login with state:', state.substring(0, 8) + '...')
 
 	// SDK делает redirect (mode: Redirect)
 	await Auth.login()

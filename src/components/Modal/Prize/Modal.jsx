@@ -34,7 +34,7 @@ const Modal = ({ prize, isDemo, onClose }) => {
 
 	const prizes = {
 		prize: {
-			name: "Супер Приз",
+			name: "Приз",
 			icon: "/images/SuperPuperPrize.png",
 			description: "Вам доступны 3 награды на выбор",
 		},
