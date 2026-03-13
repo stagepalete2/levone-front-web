@@ -64,7 +64,7 @@ const Form = ({ review, setReview, setView }) => {
             <div className={styles.inputsBlock}>
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Ваше имя:</label>
-                    <input type="text" className={styles.formControl} placeholder={client.name} disabled />
+                    <input type="text" className={styles.formControl} placeholder={client.first_name} disabled />
                 </div>
 
                 <div className={styles.formGroup}>

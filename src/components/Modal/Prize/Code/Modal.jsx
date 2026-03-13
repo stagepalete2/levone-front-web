@@ -120,7 +120,7 @@ const Modal = ({ onClose }) => {
 							</option>
 							{employees.map((employee) => (
 								<option key={employee.vk_id || employee.vk_user_id} value={employee.vk_id || employee.vk_user_id}>
-									{employee.name} {employee.lastname}
+									{employee.first_name} {employee.last_name}
 								</option>
 							))}
 						</select>

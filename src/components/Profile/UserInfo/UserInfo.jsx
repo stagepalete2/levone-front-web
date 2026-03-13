@@ -19,7 +19,7 @@ const UserInfo = ({ client }) => {
             </div>
 
             <h2 className={styles.name}>
-                ПРИВЕТ, {client?.name ? client?.name.toUpperCase() : 'ГОСТЬ'}
+                ПРИВЕТ, {client?.first_name ? client?.first_name.toUpperCase() : 'ГОСТЬ'}
             </h2>
         </div>
     )
