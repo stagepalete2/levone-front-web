@@ -24,8 +24,6 @@ const VK_APP_ID = parseInt(import.meta.env.VITE_VK_APP_ID || '54473505')
 const AUTH_STORAGE_KEY = 'levone_vk_auth'
 const PKCE_STORAGE_KEY = 'levone_vk_pkce'
 
-let vkidInitialized = false
-let lastCodeVerifier = null
 
 // ============ PKCE Helpers ============
 
@@ -106,13 +104,8 @@ function initVkid(codeVerifier, state) {
 		initParams.codeVerifier = codeVerifier
 	}
 
-	// Сбрасываем флаг — SDK нужно переинициализировать с новыми PKCE параметрами
-	vkidInitialized = false
-
 	Config.init(initParams)
 
-	vkidInitialized = true
-	lastCodeVerifier = codeVerifier
 	console.log('[VK Auth] SDK init OK — app:', VK_APP_ID, 'redirect:', redirectUri, 'state:', state ? 'yes' : 'no', 'codeVerifier:', codeVerifier ? 'yes' : 'no')
 }
 
@@ -175,6 +168,9 @@ export async function checkOAuthCallback() {
 	const urlParams = new URLSearchParams(window.location.search)
 	const code = urlParams.get('code')
 	const deviceId = urlParams.get('device_id')
+	// State из URL — это то, что VK вернул нам обратно.
+	// Передаём его в Config, чтобы SDK не жаловался на несоответствие.
+	const stateFromUrl = urlParams.get('state')
 
 	if (!code) {
 		return null
@@ -188,8 +184,9 @@ export async function checkOAuthCallback() {
 		console.error('[VK Auth] No saved codeVerifier found! PKCE will fail.')
 	}
 
-	// Инициализируем SDK с тем же codeVerifier, что был при login()
-	initVkid(pkceData?.codeVerifier || null, pkceData?.state || null)
+	// Используем state из URL (не из storage) — они всегда совпадут.
+	// codeVerifier берём из storage — он нужен для PKCE и не передаётся в URL.
+	initVkid(pkceData?.codeVerifier || null, stateFromUrl || pkceData?.state || null)
 
 	try {
 		const tokenData = await Auth.exchangeCode(code, deviceId)
