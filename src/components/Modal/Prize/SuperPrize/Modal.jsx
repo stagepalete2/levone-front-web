@@ -35,7 +35,7 @@ const Modal = ({ super_prize, onClose }) => {
 					<p className={styles.text}>Выберите Приз!</p>
 
 					<div className={styles.prizes}>
-						{super_prize?.prizes?.map((item, index) => (
+						{super_prize?.available_products?.map((item, index) => (
 							<div key={item.id} className={styles.prize} onClick={() => handleOpenInfo(item)}>
 								<img src={item.image_url || "/images/placeholder.png"} alt="" />
 								<p className={styles.info}>
