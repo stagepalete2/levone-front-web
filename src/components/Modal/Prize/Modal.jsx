@@ -2,10 +2,9 @@ import Confetti from 'react-confetti'
 import { createPortal } from 'react-dom'
 import { useState } from 'react'
 import useWindowSize from '../../../hooks/useWindowSize'
-import { useAuth, useLogo, useModal } from '../../../zustand'
+import { useLogo } from '../../../zustand'
 import { loginWithVk } from '../../../services/vkAuth'
 import styles from './Modal.module.scss'
-import { useEffect } from 'react'
 
 export const WinConfetti = () => {
 	const { width, height } = useWindowSize()
@@ -24,19 +23,13 @@ export const WinConfetti = () => {
 const Modal = ({ prize, isDemo, onClose }) => {
 
 	const coin = useLogo((state) => state.coin)
-	const setAuth = useAuth((state) => state.setAuth)
-	const pushModal = useModal((state) => state.pushModal)
 	const [isAuthLoading, setIsAuthLoading] = useState(false)
-
-	useEffect(() => {
-		console.log(coin)
-	}, [coin])
 
 	const prizes = {
 		prize: {
 			name: "Приз",
 			icon: "/images/SuperPuperPrize.png",
-			description: "Вам доступны 3 награды на выбор",
+			description: isDemo ? "Авторизуйтесь, чтобы получить ваш приз" : "Вам доступен приз",
 		},
 		coin: {
 			name: "Монеты",
