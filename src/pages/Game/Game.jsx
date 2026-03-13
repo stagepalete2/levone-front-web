@@ -91,17 +91,22 @@ const Game = () => {
 	const setHasShownPostStory = useHasShownPostStory((state) => state.setHasShownPostStory)
 	const pushModal = useModal((state) => state.pushModal)
 	const isAuthenticated = useAuth((state) => state.isAuthenticated)
-	const vkUser = useAuth((state) => state.vkUser)
-
-	const [showBirthdayModal, setShowBirthdayModal] = useState(false)
 	const [birthModalShown, setBirthModalShown] = useState(false)
 
-	// Для неавторизованных — сразу показываем ракету, без intro
 	useEffect(() => {
-		if (!isAuthenticated && view === 'intro') {
+		if (!isAuthenticated) {
+			// Неавторизованный — сразу ракета (демо)
+			if (view === 'intro') setView('game')
+			return
+		}
+		// Авторизованный: кулдаун загружен
+		if (cooldown === null) return // ждём загрузки
+		if (!cooldown.is_active && view === 'intro') {
+			// Кулдауна нет — сразу в игру
 			setView('game')
 		}
-	}, [isAuthenticated, view, setView])
+		// Кулдаун активен — остаёмся на intro (главная страница с таймером)
+	}, [isAuthenticated, cooldown, view, setView])
 
 	useEffect(() => {
 		if (hasShownPostStory || !client || !cooldown) return;
