@@ -2,7 +2,8 @@
 import useActivateSuperPrize from '../../../../../api/handlers/inventory/activatesuperprize.handler'
 
 import { createPortal } from 'react-dom'
-import { useClient, useLogo, useModal, useParams } from '../../../../../zustand'
+import { useNavigation } from '../../../../../hooks/useHandleNavigation'
+import { useClient, useModal, useParams } from '../../../../../zustand'
 import styles from './Modal.module.scss'
 
 const Modal = ({ super_prize, prize, onClose }) => {
@@ -12,8 +13,7 @@ const Modal = ({ super_prize, prize, onClose }) => {
 	const pushModal = useModal((state) => state.pushModal)
 	const clearQueue = useModal((state) => state.clearQueue)
 	const branch = useParams((state) => state.branch)
-
-	const logotype = useLogo((state) => state.logotype)
+	const { handleNavigation } = useNavigation()
 
 	const { activate } = useActivateSuperPrize()
 
@@ -30,8 +30,9 @@ const Modal = ({ super_prize, prize, onClose }) => {
 
 	const handlePick = async () => {
 		try {
-			const response = await activate({ vk_user_id: client.vk_id || client.vk_user_id, branch: branch, product_id: prize.id, super_prize: super_prize })
+			await activate({ vk_user_id: client.vk_id || client.vk_user_id, branch: branch, product_id: prize.id, super_prize: super_prize })
 			clearQueue({ pageId: 'inventory' })
+			handleNavigation('/inventory')
 		} catch (error) {
 			console.log(error)
 		}

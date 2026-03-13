@@ -59,7 +59,7 @@ const Item = ({ onClose }) => {
             <div className={styles.whiteBox}>
                 <p className={styles.timerLabel}>КУПОН АКТИВЕН</p>
                 <Countdown
-                    duration={activeItem?.activated_at && activeItem?.duration ? Math.max(0, new Date(activeItem.activated_at).getTime() + activeItem.duration * 1000 - Date.now()) : 0}
+                    duration={activeItem?.expires_at ? Math.max(0, new Date(activeItem.expires_at).getTime() - Date.now()) : 0}
                     color='#2C2C2C'
                     onComplete={() => deactivateItem(activeItem)}
                 />

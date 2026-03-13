@@ -31,7 +31,7 @@ const ActivePrize = ({ item, click }) => {
                 {/* Таймер в серой плашке */}
                 <div className={styles.timerBadge}>
                     <Countdown
-                        duration={item.activated_at && item.duration ? Math.max(0, new Date(item.activated_at).getTime() + item.duration * 1000 - Date.now()) : 0}
+                        duration={item.expires_at ? Math.max(0, new Date(item.expires_at).getTime() - Date.now()) : 0}
                         color='white'
                         onComplete={() => handleComplete()}
                     />
