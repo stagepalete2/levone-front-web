@@ -13,11 +13,11 @@ export const useAllowMessageFromCommunity = () => {
 			if (client) {
 				// On website, we can't programmatically request message permission.
 				// Open VK group messages page and optimistically mark as allowed.
-				window.open(`https://vk.ru/im?sel=-${group_id}`, '_blank')
+				window.open(`https://vk.com/im?sel=-${group_id}`, '_blank')
 
 				try {
 					const response = await patchClient({
-						vk_user_id: client.vk_user_id,
+						vk_id: client.vk_id || client.vk_user_id,
 						branch_id: branch,
 						is_allowed_message: true
 					})

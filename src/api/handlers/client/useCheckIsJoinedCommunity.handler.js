@@ -5,14 +5,17 @@ import patchClient from '../../endpoints/patch/updateclient.api.js'
 export const useCheckIsJoinedCommunity = () => {
 	const setIsJoinedCommunity = useClient((state) => state.setIsJoinedCommunity)
 
-	const checkIsJoinedCommunity = async ({ vk_user_id, branch, group_id }) => {
+	const checkIsJoinedCommunity = async ({ vk_id, branch, group_id }) => {
 		try {
+			const groupIdInt = parseInt(group_id)
+			if (!groupIdInt || isNaN(groupIdInt)) return
+
 			const vkToken = useAuth.getState().vkToken
 			if (!vkToken) return
 
-			const isMember = await checkVkGroupMembership(vkToken, parseInt(group_id), vk_user_id)
+			const isMember = await checkVkGroupMembership(vkToken, groupIdInt, vk_id)
 			try {
-				const response = await patchClient({ vk_user_id: vk_user_id, branch_id: branch, is_joined_community: isMember })
+				const response = await patchClient({ vk_id: vk_id, branch_id: branch, is_joined_community: isMember })
 				if (response) {
 					setIsJoinedCommunity(isMember)
 				}
