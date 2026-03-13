@@ -13,7 +13,7 @@ const Modal = ({ prize, onClose }) => {
 
 	const handleActivate = async () => {
 		await activate({
-			vk_user_id: client.vk_user_id,
+			vk_user_id: client.vk_id || client.vk_user_id,
 			branch: branch,
 			inventory_id: prize.id
 		})
@@ -36,7 +36,7 @@ const Modal = ({ prize, onClose }) => {
 				<div className={styles.cardWrapper}>
 					<div className={styles.imageArea}>
 						<img
-							src={`${prize.product_image}`}
+							src={prize.product_image_url || "/images/placeholder.png"}
 							className={styles.productImage}
 							alt={prize.product_name}
 						/>

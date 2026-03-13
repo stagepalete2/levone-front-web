@@ -15,7 +15,7 @@ export const useCheckIsJoinedCommunity = () => {
 
 			const isMember = await checkVkGroupMembership(vkToken, groupIdInt, vk_id)
 			try {
-				const response = await patchClient({ vk_id: vk_id, branch_id: branch, is_joined_community: isMember })
+				const response = await patchClient({ vk_id: vk_id, branch_id: branch, community_via_app: isMember })
 				if (response) {
 					setIsJoinedCommunity(isMember)
 				}

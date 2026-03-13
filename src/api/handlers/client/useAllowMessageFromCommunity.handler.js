@@ -19,7 +19,7 @@ export const useAllowMessageFromCommunity = () => {
 					const response = await patchClient({
 						vk_id: client.vk_id || client.vk_user_id,
 						branch_id: branch,
-						is_allowed_message: true
+						newsletter_via_app: true
 					})
 					if (response) {
 						setIsAllowedMessageFromCommunity(true)
