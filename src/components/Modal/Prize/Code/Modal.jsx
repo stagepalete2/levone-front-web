@@ -39,7 +39,7 @@ const Modal = ({ onClose }) => {
 
 		try {
 			const response = await play({
-				vk_user_id: client.vk_user_id,
+				vk_user_id: client.vk_id || client.vk_user_id,
 				branch: branch,
 				code: code,
 				employee_id: servedBy
@@ -119,7 +119,7 @@ const Modal = ({ onClose }) => {
 								Выберите сотрудника
 							</option>
 							{employees.map((employee) => (
-								<option key={employee.vk_user_id} value={employee.vk_user_id}>
+								<option key={employee.vk_id || employee.vk_user_id} value={employee.vk_id || employee.vk_user_id}>
 									{employee.name} {employee.lastname}
 								</option>
 							))}

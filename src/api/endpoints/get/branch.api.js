@@ -5,9 +5,7 @@ import { useCompany } from '../../../zustand'
 const getBranch = async ({ branch }) => {
 	const domain = useCompany.getState().domain
 	try {
-		const response = await axios.get(`https://${domain}/api/v1/branch/`, {
-			params: { branch }
-		});
+		const response = await axios.get(`https://${domain}/api/v1/branches/${branch}/`);
 		return response.data;
 	} catch (error) {
 		if (error.response) {

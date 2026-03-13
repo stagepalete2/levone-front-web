@@ -5,16 +5,16 @@
 import axios from 'axios'
 import { useCompany } from '../../../zustand'
 
-const postClient = async ({vk_user_id, branch, name, lastname, sex}) => {
+const postClient = async ({vk_user_id, branch, name, lastname, photo_url}) => {
 	const domain = useCompany.getState().domain
 
 	try {
 		const response = await axios.post(`https://${domain}/api/v1/client/`, {
-			vk_user_id: vk_user_id, 
-			name: name,
-			lastname: lastname,
+			vk_id: vk_user_id,
+			first_name: name,
+			last_name: lastname,
 			branch_id: branch,
-			sex: sex
+			photo_url: photo_url || null
 		})
 		return response.data
 	} catch (error) {

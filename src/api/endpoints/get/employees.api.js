@@ -6,7 +6,7 @@ const getEmployees = async ({ branch }) => {
 	const domain = useCompany.getState().domain
 	try {
 		const response = await axios.get(`https://${domain}/api/v1/employees/`, { 
-			params: { branch } 
+			params: { branch_id: branch }
 		});
 		return response.data;
 	} catch (error) {

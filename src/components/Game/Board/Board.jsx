@@ -27,8 +27,6 @@ function shuffle(arr) {
 
 
 
-const PAGE_ID = 'game'
-
 const Board = () => {
 	const branch = useParams((state) => state.branch)
 	const client = useClient((state) => state.client)
@@ -75,7 +73,7 @@ const Board = () => {
 		if (matches === pairsCount) {
 			resetGame()
 			setView('intro')
-			play({ vk_user_id: client.vk_user_id, branch: branch }).then((response) => {
+			play({ vk_user_id: client.vk_id || client.vk_user_id, branch: branch }).then((response) => {
 				console.log(response)
 			})
 		}
@@ -126,7 +124,7 @@ const Board = () => {
 	};
 
 	const onComplete = () => {
-		setGameCooldownInterface({ vk_user_id: client.vk_user_id, branch: branch }).then((prom) => {
+		setGameCooldownInterface({ vk_user_id: client.vk_user_id, branch: branch }).then(() => {
 			setView('intro')
 			resetGame()
 		})

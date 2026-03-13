@@ -7,7 +7,7 @@ const postActivateSuperPrize = async ({ vk_user_id, branch, product_id }) => {
 
 	try {
 		const response = await axios.post(`https://${domain}/api/v1/super-prize/`, {
-			vk_user_id: vk_user_id,
+			vk_id: vk_user_id,
 			branch_id: branch,
 			product_id: product_id
 		})

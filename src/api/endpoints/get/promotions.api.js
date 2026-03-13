@@ -5,7 +5,7 @@ const getPromotions = async ({ branch }) => {
     const domain = useCompany.getState().domain
     try {
         const response = await axios.get(`https://${domain}/api/v1/promotions/`, {
-            params: { branch }
+            params: { branch_id: branch }
         });
         return response.data
     } catch (error) {

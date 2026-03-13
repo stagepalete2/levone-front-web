@@ -6,8 +6,8 @@ const postSendReview = async ({ vk_user_id, branch, rating, phone, table, review
 	const domain = useCompany.getState().domain
 
 	try {
-		const response = await axios.post(`https://${domain}/api/v1/review/`, {
-			vk_user_id: vk_user_id,
+		const response = await axios.post(`https://${domain}/api/v1/testimonials/`, {
+			vk_id: vk_user_id,
 			branch_id: branch,
 			rating: rating,
 			phone: phone,

@@ -21,7 +21,7 @@ const useClientHandler = () => {
 				branch: branch,
 				name: vkUser.first_name || 'User',
 				lastname: vkUser.last_name || '',
-				sex: vkUser.sex != null ? Number(vkUser.sex) : 0
+				photo_url: vkUser.photo_200 || null
 			})
 
 			console.log('[Client] response:', client)

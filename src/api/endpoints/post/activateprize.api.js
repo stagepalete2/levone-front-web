@@ -7,9 +7,9 @@ const postActivatePrize = async ({ vk_user_id, branch, inventory_id, code }) => 
 
 	try {
 		const body = {
-			vk_user_id: vk_user_id,
+			vk_id: vk_user_id,
 			branch_id: branch,
-			inventory_id: inventory_id
+			item_id: inventory_id
 		}
 		if (code !== undefined) {
 			body.code = code

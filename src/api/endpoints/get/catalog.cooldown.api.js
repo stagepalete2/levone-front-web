@@ -8,7 +8,7 @@ const getCatalogCooldown = async ({ branch, vk_user_id }) => {
 	const domain = useCompany.getState().domain 
 	try {
 		const response = await axios.get(`https://${domain}/api/v1/catalog/cooldown/`, { 
-			params: { branch, vk_user_id } 
+			params: { branch_id: branch, vk_id: vk_user_id } 
 		});
 		return response.data;
 	} catch (error) {

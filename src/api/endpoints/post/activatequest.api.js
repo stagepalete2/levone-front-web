@@ -7,8 +7,8 @@ const postActivateQuest = async ({vk_user_id, branch, quest_id}) => {
 
 	try {
 		const response = await axios.post(`https://${domain}/api/v1/quest/activate/`, {
-			vk_user_id: vk_user_id,
-			branch: branch,
+			vk_id: vk_user_id,
+			branch_id: branch,
 			quest_id: quest_id
 		})
 		return response.data

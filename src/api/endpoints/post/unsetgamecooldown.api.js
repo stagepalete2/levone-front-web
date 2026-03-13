@@ -7,8 +7,8 @@ const unsetGameCooldown = async ({vk_user_id, branch}) => {
 	try {
 		const response = await axios.delete(`https://${domain}/api/v1/game/cooldown/`, {
 				params: {
-				vk_user_id: vk_user_id,
-				branch: branch
+				vk_id: vk_user_id,
+				branch_id: branch
 			}
 		})
 		return response.data

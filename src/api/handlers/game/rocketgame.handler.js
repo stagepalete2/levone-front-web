@@ -1,125 +1,78 @@
-import { useAuth, useClient, useGameCooldown, useModal, useSuperPrize } from '../../../zustand'
+import { useClient, useGameCooldown, useModal, useSuperPrize } from '../../../zustand'
 import getGameCooldown from '../../endpoints/get/game.cooldown.api'
-import postPlayGame from '../../endpoints/post/playgame.api'
+import postGameClaim from '../../endpoints/post/gameclaim.api'
+import postGameStart from '../../endpoints/post/gamestart.api'
 
 const usePlayGame = () => {
 	const addSuperPrize = useSuperPrize((state) => state.addSuperPrize)
 	const setCooldown = useGameCooldown((state) => state.setGameCooldown)
 	const addCoins = useClient((state) => state.addCoins)
-	const client = useClient((state) => state.client)
 	const pushModal = useModal((state) => state.pushModal)
 
-	// ЭТАП 1: Только получение данных (для запуска ракеты)
-	const fetchGameResult = async ({ vk_user_id, branch, code = '', employee_id }) => {
+	// Phase 1: start game session → { session_token, score } | { needs_code: true } | null
+	const fetchGameResult = async ({ vk_user_id, branch, code = '' }) => {
 		try {
-			const response = await postPlayGame({
-				vk_user_id: vk_user_id,
-				branch: branch,
-				code: code,
-				employee_id: employee_id
-			})
-			return response;
+			const response = await postGameStart({ vk_user_id, branch, code })
+			return response
 		} catch (error) {
-			console.error(error);
-			return null;
+			console.error('[fetchGameResult]', error)
+			return null
 		}
 	}
 
-	// ЭТАП 2: Показ результата (вызывается после анимации)
-	const processGameResult = async (response, { vk_user_id, branch }) => {
-		if (!response) return;
+	// Phase 2: claim reward after animation, then show modal
+	const processGameResult = async (startResponse, { vk_user_id, branch, employee_id }) => {
+		if (!startResponse) return
 
-		const isAuthenticated = useAuth.getState().isAuthenticated
-
-		// Demo play for unauthenticated users — show prize with auth trigger
-		if (response._isDemo) {
+		// Demo play for unauthenticated users
+		if (startResponse._isDemo) {
 			pushModal({
 				pageId: 'game',
 				modal: {
 					type: 'prize',
-					props: { prize: response, isDemo: true }
+					props: { prize: startResponse, isDemo: true }
 				}
-			});
-			return;
-		}
-
-		// Логика модалок и обновления стейта
-		if (response.type === 'prize') {
-			const modalConfig = {
-				type: 'prize',
-				props: { prize: response }
-			};
-
-			const taskWrapper = {
-				type: 'task',
-				props: {},
-				nextModal: modalConfig
-			};
-
-			const finalModal = (!client.is_joined_community || !client.is_allowed_message)
-				? taskWrapper
-				: modalConfig;
-
-			pushModal({ pageId: 'game', modal: finalModal });
-			addSuperPrize(response.reward);
-		}
-
-		if (response.type === 'coin') {
-			const modalConfig = {
-				type: 'prize',
-				props: { prize: response }
-			};
-
-			const taskWrapper = {
-				type: 'task',
-				props: {},
-				nextModal: modalConfig
-			};
-
-			const finalModal = (!client.is_joined_community || !client.is_allowed_message)
-				? taskWrapper
-				: modalConfig;
-
-			pushModal({ pageId: 'game', modal: finalModal });
-			addCoins(response.reward);
-		}
-
-		if (response.type === 'code') {
-			const modalConfig = {
-				type: 'code',
-				props: { prize: response } // Передаем response, даже если там нет суммы, модалка сама решит
-			};
-
-			// Для кода (type: code) сервер может не прислать reward, поэтому props пустой или с response
-			const codeModalSimple = {
-				type: 'code',
-				props: {}
-			};
-
-			const taskWrapper = {
-				type: 'task',
-				props: {},
-				nextModal: modalConfig // Или codeModalSimple, зависит от вашей реализации модалки Code
-			};
-
-			const finalModal = (!client.is_joined_community || !client.is_allowed_message)
-				? taskWrapper
-				: codeModalSimple;
-
-			pushModal({ pageId: 'game', modal: finalModal });
-		}
-
-		// Обновляем кулдаун в конце
-		try {
-			const cooldownResponse = await getGameCooldown({
-				vk_user_id: vk_user_id,
-				branch: branch
 			})
-			if (cooldownResponse) {
-				setCooldown(cooldownResponse)
+			return
+		}
+
+		// Claim the actual reward from backend
+		const claimResponse = await postGameClaim({
+			session_token: startResponse.session_token,
+			employee_id
+		})
+
+		if (!claimResponse) return
+
+		const currentClient = useClient.getState().client
+		const needsTask = !currentClient?.is_joined_community || !currentClient?.is_allowed_message
+
+		if (claimResponse.type === 'super_prize') {
+			const modalConfig = {
+				type: 'prize',
+				props: { prize: { type: 'prize', reward: claimResponse.reward } }
 			}
+			const finalModal = needsTask ? { type: 'task', props: {}, nextModal: modalConfig } : modalConfig
+			pushModal({ pageId: 'game', modal: finalModal })
+			addSuperPrize(claimResponse.reward)
+		}
+
+		if (claimResponse.type === 'coin') {
+			const modalConfig = {
+				type: 'prize',
+				props: { prize: claimResponse }
+			}
+			const finalModal = needsTask ? { type: 'task', props: {}, nextModal: modalConfig } : modalConfig
+			pushModal({ pageId: 'game', modal: finalModal })
+			addCoins(Number(claimResponse.reward))
+		}
+
+		// Refresh cooldown
+		try {
+			const cooldownResponse = await getGameCooldown({ vk_user_id, branch })
+			if (cooldownResponse) setCooldown(cooldownResponse)
 		} catch (e) {
-			console.error("Cooldown error", e);
+			console.error('[Cooldown refresh]', e)
 		}
 	}
 

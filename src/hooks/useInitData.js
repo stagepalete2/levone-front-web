@@ -122,7 +122,7 @@ const useInitData = () => {
 					if (parsedBdate) {
 						try {
 							await patchClient({
-								vk_user_id: client.vk_user_id,
+								vk_id: client.vk_id || client.vk_user_id,
 								branch_id: branch,
 								birth_date: parsedBdate
 							})
@@ -154,7 +154,7 @@ const useInitData = () => {
 			// 4. Логика Рефералов и Доставки (ВАЖНО: не делаем return, чтобы данные грузились дальше)
 			if (is_referral && from) {
 				await patchClient({
-					vk_user_id: client.vk_user_id,
+					vk_id: client.vk_id || client.vk_user_id,
 					branch_id: branch,
 					is_reffered: Boolean(is_referral),
 					invited_by: from
@@ -169,7 +169,7 @@ const useInitData = () => {
 			// 5. Проверка сообщества
 			// Не блокируем выполнение, если проверка упадет (можно обернуть в try/catch или оставить так)
 			await checkIsJoinedCommunity({
-				vk_user_id: client.vk_user_id,
+				vk_id: client.vk_id || client.vk_user_id,
 				branch: branch,
 				group_id: companyResponse.group_id
 			})
@@ -190,19 +190,19 @@ const useInitData = () => {
 				birthdayStatusResponse
 			] = await Promise.all([
 				getCatalog({ branch }),
-				getInventory({ branch, vk_user_id: client.vk_user_id }),
-				getSuperPrize({ branch, vk_user_id: client.vk_user_id }),
-				getQuest({ branch, vk_user_id: client.vk_user_id }),
-				getActiveQuest({ branch, vk_user_id: client.vk_user_id }),
-				getCatalogCooldown({ branch, vk_user_id: client.vk_user_id }),
-				getInventoryCooldown({ branch, vk_user_id: client.vk_user_id }),
-				getQuestCooldown({ branch, vk_user_id: client.vk_user_id }),
-				getGameCooldown({ branch, vk_user_id: client.vk_user_id }),
+				getInventory({ branch, vk_user_id: client.vk_id || client.vk_user_id }),
+				getSuperPrize({ branch, vk_user_id: client.vk_id || client.vk_user_id }),
+				getQuest({ branch, vk_user_id: client.vk_id || client.vk_user_id }),
+				getActiveQuest({ branch, vk_user_id: client.vk_id || client.vk_user_id }),
+				getCatalogCooldown({ branch, vk_user_id: client.vk_id || client.vk_user_id }),
+				getInventoryCooldown({ branch, vk_user_id: client.vk_id || client.vk_user_id }),
+				getQuestCooldown({ branch, vk_user_id: client.vk_id || client.vk_user_id }),
+				getGameCooldown({ branch, vk_user_id: client.vk_id || client.vk_user_id }),
 				getEmployees({ branch }),
 				getPromotions({ branch }),
 				getBirthdayStatus({
 					branch,
-					vk_user_id: client.vk_user_id
+					vk_user_id: client.vk_id || client.vk_user_id
 				})
 			])
 
@@ -225,7 +225,7 @@ const useInitData = () => {
 			// 8. Проверка сотрудника
 			if (employeesResponse) {
 				const isUserEmployee = employeesResponse.some(
-					(employee) => employee.vk_user_id === client.vk_user_id
+					(employee) => (employee.vk_id || employee.vk_user_id) === (client.vk_id || client.vk_user_id)
 				);
 				setIsEmployee(isUserEmployee);
 			}

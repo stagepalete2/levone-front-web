@@ -3,6 +3,16 @@ import usePlayGame from '../../../api/handlers/game/rocketgame.handler'
 import { useAuth, useClient, useParams, useView } from '../../../zustand'
 import styles from './Rocket.module.scss'
 
+// score (1-10) from backend → target altitude for animation
+function scoreToAltitude(score) {
+    if (score >= 10) return 1500
+    if (score >= 9)  return 1350
+    if (score >= 8)  return 1200
+    if (score >= 6)  return 900
+    if (score >= 4)  return 500
+    return 200
+}
+
 // Конфигурация уровней
 const PRIZE_LEVELS = [
     { altitude: 200,  label: '+300',    icon: '🪙' },
@@ -25,14 +35,15 @@ function easeInOutQuad(t) {
 const Rocket = () => {
     const branch = useParams((state) => state.branch);
     const client = useClient((state) => state.client);
-    const setView = useView((state) => state.setView);
-    const isAuthenticated = useAuth((state) => state.isAuthenticated);
+    const setView = useView((state) => state.setView)
 
-    const { fetchGameResult, processGameResult } = usePlayGame();
+    const { fetchGameResult, processGameResult } = usePlayGame()
 
-    const [isFlying, setIsFlying] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [displayAltitude, setDisplayAltitude] = useState(0);
+    const [isFlying, setIsFlying] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [displayAltitude, setDisplayAltitude] = useState(0)
+    const [needsCode, setNeedsCode] = useState(false)
+    const [codeInput, setCodeInput] = useState('')
 
     const rocketRef = useRef(null);
     const containerRef = useRef(null);
@@ -51,50 +62,44 @@ const Rocket = () => {
         }));
     }, []);
 
-    const handleLaunch = async () => {
-        if (isFlying || isLoading) return;
+    const handleLaunch = async (codeOverride = '') => {
+        if (isFlying || isLoading) return
 
-        const isAuthed = useAuth.getState().isAuthenticated;
+        const isAuthed = useAuth.getState().isAuthenticated
 
-        // If not authenticated, run a demo game with guaranteed super prize
+        // Unauthenticated: demo flight, always max altitude
         if (!isAuthed) {
-            const demoResponse = {
-                type: 'prize',
-                reward: { id: 'demo', name: 'Приз' },
-                _isDemo: true, // marker for processGameResult
-            };
-            runFlightAnimation(1500, demoResponse);
-            return;
+            const demoResponse = { type: 'prize', reward: { id: 'demo', name: 'Приз' }, _isDemo: true }
+            runFlightAnimation(1500, demoResponse)
+            return
         }
 
-        setIsLoading(true);
+        setIsLoading(true)
 
-        const response = await fetchGameResult({
-            vk_user_id: client?.vk_user_id || 0,
-            branch: branch
-        });
+        const startResponse = await fetchGameResult({
+            vk_user_id: client?.vk_id || client?.vk_user_id || 0,
+            branch,
+            code: codeOverride || codeInput
+        })
 
-        setIsLoading(false);
+        setIsLoading(false)
 
-        if (!response) return;
+        if (!startResponse) return
 
-        let targetAltitude = 200; // default → +300
-
-        if (response.type === 'prize') {
-            // Джекпот — максимальная высота
-            targetAltitude = 1500;
-        } else if (response.type === 'code') {
-            targetAltitude = 1350;
-        } else if (response.type === 'coin') {
-            const amount = Number(response.reward);
-            if (amount >= 2000)      targetAltitude = 1200; // +2000
-            else if (amount >= 1000) targetAltitude = 900;  // +1000
-            else if (amount >= 700)  targetAltitude = 500;  // +700
-            else                     targetAltitude = 200;  // +300
+        // Backend requires daily code (3rd+ game)
+        if (startResponse.needs_code) {
+            setNeedsCode(true)
+            return
         }
 
-        runFlightAnimation(targetAltitude, response);
-    };
+        setNeedsCode(false)
+        setCodeInput('')
+        runFlightAnimation(scoreToAltitude(startResponse.score || 1), startResponse)
+    }
+
+    const handleCodeSubmit = () => {
+        if (codeInput.trim()) handleLaunch(codeInput.trim())
+    }
 
     const runFlightAnimation = (targetAltitude, serverResponse) => {
         setIsFlying(true);
@@ -168,13 +173,14 @@ const Rocket = () => {
 
     const finishGame = async (serverResponse) => {
         setTimeout(async () => {
-            setView('intro');
+            setIsFlying(false)
+            setView('intro')
             await processGameResult(serverResponse, {
-                vk_user_id: client?.vk_user_id || 0,
-                branch: branch
-            });
-        }, 500);
-    };
+                vk_user_id: client?.vk_id || client?.vk_user_id || 0,
+                branch
+            })
+        }, 500)
+    }
 
     return (
         <div className={styles.gameContainer} ref={containerRef}>
@@ -227,13 +233,39 @@ const Rocket = () => {
             </div>
 
             <div className={styles.launchArea}>
-                <button
-                    className={styles.launchBtn}
-                    onClick={handleLaunch}
-                    disabled={isFlying || isLoading}
-                >
-                    {isLoading ? '...' : (isFlying ? 'ПОЛЕТ' : 'ПУСК')}
-                </button>
+                {needsCode ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                        <p style={{ color: 'white', fontSize: 13, textAlign: 'center', margin: 0 }}>
+                            Введите код дня
+                        </p>
+                        <input
+                            type="text"
+                            value={codeInput}
+                            onChange={(e) => setCodeInput(e.target.value)}
+                            placeholder="12345"
+                            maxLength={10}
+                            style={{
+                                padding: '8px 16px', borderRadius: 20, border: 'none',
+                                textAlign: 'center', fontSize: 18, width: 120, letterSpacing: 4
+                            }}
+                        />
+                        <button
+                            className={styles.launchBtn}
+                            onClick={handleCodeSubmit}
+                            disabled={!codeInput.trim()}
+                        >
+                            ПУСК
+                        </button>
+                    </div>
+                ) : (
+                    <button
+                        className={styles.launchBtn}
+                        onClick={() => handleLaunch()}
+                        disabled={isFlying || isLoading}
+                    >
+                        {isLoading ? '...' : (isFlying ? 'ПОЛЕТ' : 'ПУСК')}
+                    </button>
+                )}
             </div>
         </div>
     );
