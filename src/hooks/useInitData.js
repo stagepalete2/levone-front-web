@@ -88,7 +88,7 @@ const useInitData = () => {
 		try {
 			// 1. Получаем Компанию
 			const companyResponse = await getCompany({ company: company })
-			if (!companyResponse?.company_id) {
+			if (!companyResponse?.domain) {
 				throw new Error("Company not found")
 			}
 
