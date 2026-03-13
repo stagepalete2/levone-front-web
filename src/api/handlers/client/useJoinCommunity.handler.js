@@ -10,10 +10,10 @@ export const useJoinCommunity = () => {
 		try {
 			if (client) {
 				// Open VK group page in new tab for user to join
-				window.open(`https://vk.ru/club${group_id}`, '_blank')
+				window.open(`https://vk.com/club${group_id}`, '_blank')
 				// Optimistically mark as joined (user is expected to join)
 				try {
-					const response = await patchClient({ vk_user_id: client.vk_user_id, branch_id: branch, is_joined_community: true })
+					const response = await patchClient({ vk_id: client.vk_id || client.vk_user_id, branch_id: branch, is_joined_community: true })
 					if (response) {
 						setIsJoinedCommunity(true)
 					}
