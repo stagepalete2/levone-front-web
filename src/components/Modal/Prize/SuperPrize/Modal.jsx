@@ -1,6 +1,6 @@
 
 import { createPortal } from 'react-dom'
-import { useLogo, useModal } from '../../../../zustand'
+import { useCompany, useLogo, useModal } from '../../../../zustand'
 import styles from './Modal.module.scss'
 
 const Modal = ({ super_prize, onClose }) => {
@@ -9,6 +9,7 @@ const Modal = ({ super_prize, onClose }) => {
 	const pushModal = useModal((state) => state.pushModal)
 
 	const logotype = useLogo((state) => state.logotype)
+	const domain = useCompany((state) => state.domain)
 
 	const handleOpenInfo = (prize) => {
 		popModal({ pageId: 'inventory' })
@@ -37,7 +38,7 @@ const Modal = ({ super_prize, onClose }) => {
 					<div className={styles.prizes}>
 						{super_prize?.prizes?.map((item, index) => (
 							<div key={item.id} className={styles.prize} onClick={() => handleOpenInfo(item)}>
-								<img src={`${item.image}`} alt="" />
+								<img src={item.image_url ? `https://${domain}${item.image_url}` : "/images/placeholder.png"} alt="" />
 								<p className={styles.info}>
 									{item.name}
 								</p>
