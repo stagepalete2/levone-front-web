@@ -1,7 +1,6 @@
 import Lottie from 'lottie-react'; // Импорт Lottie
 import { useEffect, useMemo } from 'react'
 import ModalManager from '../../components/Modal/Manager'
-import { getTimeLeft } from '../../helpers/time'
 import { useNavigation } from '../../hooks/useHandleNavigation'
 import { useInventory } from '../../zustand'
 
@@ -20,7 +19,7 @@ const Item = ({ onClose }) => {
     const deactivateItem = useInventory((state) => state.deactivateItem)
 
     const activeItem = useMemo(() => {
-        return items.find((item) => item.status === 'ACTIVE')
+        return items.find((item) => item.status?.toLowerCase() === 'active')
     }, [items])
 
     useEffect(() => {
@@ -42,9 +41,9 @@ const Item = ({ onClose }) => {
             <div className={styles.headerTitle}>ВЫИГРЫШ</div>
 
             <div className={styles.imageContainer}>
-                {activeItem?.product_image ? (
+                {activeItem?.product_image_url ? (
                     <img
-                        src={`${activeItem.product_image}`}
+                        src={activeItem.product_image_url}
                         className={styles.productImg}
                         alt="Prize"
                     />
@@ -60,7 +59,7 @@ const Item = ({ onClose }) => {
             <div className={styles.whiteBox}>
                 <p className={styles.timerLabel}>КУПОН АКТИВЕН</p>
                 <Countdown
-                    duration={getTimeLeft(activeItem?.activated_at, activeItem?.duration, import.meta.env.VITE_TZ)}
+                    duration={activeItem?.activated_at && activeItem?.duration ? Math.max(0, new Date(activeItem.activated_at).getTime() + activeItem.duration * 1000 - Date.now()) : 0}
                     color='#2C2C2C'
                     onComplete={() => onComplete()}
                 />

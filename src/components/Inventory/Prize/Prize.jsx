@@ -12,7 +12,7 @@ const Prize = ({ item, click, isUsed = false }) => {
 
     console.log(item)
 
-    if (item.is_active) {
+    if (item.status?.toLowerCase() === 'active') {
         // Если предмет активен (таймер запущен)
         buttonLabel = 'КУПОН'
     } else if (isUsed) {
