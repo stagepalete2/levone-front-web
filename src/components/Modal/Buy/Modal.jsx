@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import useBuy from '../../../api/handlers/catalog/buy.handler'
-import { useClient, useCompany, useParams } from '../../../zustand'
+import { useClient, useParams } from '../../../zustand'
 import styles from './Modal.module.scss'
 
 const Modal = ({ selected, setSelected }) => {
 	const client = useClient((state) => state.client)
 	const branch = useParams((state) => state.branch)
-	const domain = useCompany((state) => state.domain)
 
 	const [shake, setShake] = useState(false)
 	const { buy } = useBuy()
@@ -69,7 +68,7 @@ const Modal = ({ selected, setSelected }) => {
 				<div className={styles.outerWrapper}>
 					<div className={styles.imageWrapper}>
 						<img
-							src={selected.image_url ? `https://${domain}${selected.image_url}` : "/images/placeholder.png"}
+							src={selected.image_url || "/images/placeholder.png"}
 							alt={selected.name}
 							className={styles.image}
 						/>

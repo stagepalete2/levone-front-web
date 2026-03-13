@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import getBirthdayPrizes from '../../../api/endpoints/get/birthday.prizes.api'
 import postBirthdayPrize from '../../../api/endpoints/post/birthday.prize.post.api'
-import { useClient, useCompany, useInventory, useParams } from '../../../zustand'
+import { useClient, useInventory, useParams } from '../../../zustand'
 import styles from './Modal.module.scss'
 
 const Modal = ({ onClose, onPrizeClaimed }) => {
 	const client = useClient((state) => state.client)
 	const branch = useParams((state) => state.branch)
 	const addItem = useInventory((state) => state.addItem)
-	const domain = useCompany((state) => state.domain)
 
 	const [prizes, setPrizes] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -78,7 +77,7 @@ const Modal = ({ onClose, onPrizeClaimed }) => {
 									className={`${styles.prize} ${selectedId === prize.id ? styles.selected : ''}`}
 									onClick={() => handleSelectPrize(prize)}
 								>
-									<img src={prize.image_url ? `https://${domain}${prize.image_url}` : "/images/placeholder.png"} alt={prize.name} className={styles.prizeImage} />
+									<img src={prize.image_url || "/images/placeholder.png"} alt={prize.name} className={styles.prizeImage} />
 									<div className={styles.prizeInfo}>
 										{prize.name}
 									</div>

@@ -1,11 +1,10 @@
-import { useCompany, useInventoryCooldown } from '../../../zustand'
+import { useInventoryCooldown } from '../../../zustand'
 import styles from './Prize.module.scss'
 
 const Prize = ({ item, click, isUsed = false }) => {
 
     // Получаем глобальное состояние перезарядки
     const cooldown = useInventoryCooldown((state) => state.inventoryCooldown)
-    const domain = useCompany((state) => state.domain)
 
     let buttonLabel = 'ИСПОЛЬЗОВАТЬ'
     let isDisabled = false
@@ -35,7 +34,7 @@ const Prize = ({ item, click, isUsed = false }) => {
         >
             <div className={styles.imageWrapper}>
                 <img
-                    src={item.product_image_url ? `https://${domain}${item.product_image_url}` : "/images/placeholder.png"}
+                    src={item.product_image_url || "/images/placeholder.png"}
                     alt={item.product_name}
                     loading='lazy'
                 />

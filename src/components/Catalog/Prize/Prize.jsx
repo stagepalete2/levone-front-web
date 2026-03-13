@@ -1,10 +1,9 @@
-import { useCatalogCooldown, useCompany } from '../../../zustand'
+import { useCatalogCooldown } from '../../../zustand'
 import styles from './Prize.module.scss'
 
 const Prize = ({ item, click }) => {
 
     const cooldown = useCatalogCooldown((state) => state.catalogCooldown)
-    const domain = useCompany((state) => state.domain)
 
     // Если на перезарядке, блокируем клик
     const handleClick = () => {
@@ -19,7 +18,7 @@ const Prize = ({ item, click }) => {
         <div className={`${styles.card} ${cooldown?.is_active ? styles.disabled : ''}`} onClick={handleClick}>
             <div className={styles.imageWrapper}>
                 <img
-                    src={item.image_url ? `https://${domain}${item.image_url}` : "/images/placeholder.png"}
+                    src={item.image_url || "/images/placeholder.png"}
                     alt={item.name}
                     loading='lazy'
                 />

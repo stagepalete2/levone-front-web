@@ -2,7 +2,7 @@
 import useActivateSuperPrize from '../../../../../api/handlers/inventory/activatesuperprize.handler'
 
 import { createPortal } from 'react-dom'
-import { useClient, useCompany, useLogo, useModal, useParams } from '../../../../../zustand'
+import { useClient, useLogo, useModal, useParams } from '../../../../../zustand'
 import styles from './Modal.module.scss'
 
 const Modal = ({ super_prize, prize, onClose }) => {
@@ -14,7 +14,6 @@ const Modal = ({ super_prize, prize, onClose }) => {
 	const branch = useParams((state) => state.branch)
 
 	const logotype = useLogo((state) => state.logotype)
-	const domain = useCompany((state) => state.domain)
 
 	const { activate } = useActivateSuperPrize()
 
@@ -51,7 +50,7 @@ const Modal = ({ super_prize, prize, onClose }) => {
 					<p className={styles.text}>Выберите Приз</p>
 
 					<div className={styles.detailCard}>
-						<img src={prize.image_url ? `https://${domain}${prize.image_url}` : "/images/placeholder.png"} alt="" />
+						<img src={prize.image_url || "/images/placeholder.png"} alt="" />
 						<p className={styles.title}>
 							{prize.name}
 						</p>
