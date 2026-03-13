@@ -1,5 +1,5 @@
 import { useClient, useGameCooldown, useParams } from '../../../zustand'
-import patchClient from '../../endpoints/patch/updateclient.api'
+import postStory from '../../endpoints/post/poststory.api'
 import unsetGameCooldown from '../../endpoints/post/unsetgamecooldown.api'
 
 
@@ -23,16 +23,15 @@ const usePostStory = () => {
 			// Optimistically mark story as uploaded after a delay
 			// (we can't know for sure if they actually shared)
 			if (shareWindow) {
-				const res = await patchClient({
-					vk_user_id: client.vk_user_id,
-					branch_id: branch,
-					is_story_uploaded: true
+				const res = await postStory({
+					vk_id: client.vk_id || client.vk_user_id,
+					branch_id: branch
 				})
 				if (res) {
 					setIsStoryUploaded(true)
 					resetGameCooldown()
 					const deleteresponse = await unsetGameCooldown({
-						vk_user_id: client.vk_user_id,
+						vk_user_id: client.vk_id || client.vk_user_id,
 						branch: branch
 					})
 					if (deleteresponse) {

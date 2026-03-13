@@ -10,7 +10,7 @@ const useUpdateClientHandler = () => {
 		try {
 
 			const client = await patchClient({
-				vk_user_id: vk_user_id,
+				vk_id: vk_user_id,
 				branch_id: branch,
 				birth_date: birth_date
 			})
