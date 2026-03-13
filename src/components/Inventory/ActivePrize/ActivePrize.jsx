@@ -1,17 +1,11 @@
-import { getTimeLeft } from '../../../helpers/time'
 import Countdown from '../../Countdown/Countdown'
 
-import { useEffect } from 'react'
 import { useInventory } from '../../../zustand'
 import styles from './ActivePrize.module.scss'
 
 const ActivePrize = ({ item, click }) => {
 
     const deactivateItem = useInventory((state) => state.deactivateItem)
-
-    useEffect(() => {
-        console.log(item)
-    }, [item])
 
     const handleComplete = () => {
         deactivateItem(item)
@@ -21,7 +15,7 @@ const ActivePrize = ({ item, click }) => {
         <div className={styles.card} onClick={() => click(item)}>
             <div className={styles.imageWrapper}>
                 <img
-                    src={`${item.product_image}`}
+                    src={item.product_image_url || '/images/placeholder.png'}
                     alt={item.product_name}
                     loading='lazy'
                 />
@@ -37,11 +31,7 @@ const ActivePrize = ({ item, click }) => {
                 {/* Таймер в серой плашке */}
                 <div className={styles.timerBadge}>
                     <Countdown
-                        duration={getTimeLeft(
-                            item.activated_at,
-                            item.duration,
-                            import.meta.env.VITE_TZ
-                        )}
+                        duration={item.activated_at && item.duration ? Math.max(0, new Date(item.activated_at).getTime() + item.duration * 1000 - Date.now()) : 0}
                         color='white'
                         onComplete={() => handleComplete()}
                     />

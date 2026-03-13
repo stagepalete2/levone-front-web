@@ -19,7 +19,7 @@ const Item = ({ onClose }) => {
     const deactivateItem = useInventory((state) => state.deactivateItem)
 
     const activeItem = useMemo(() => {
-        return items.find((item) => item.status?.toLowerCase() === 'active')
+        return items.find((item) => item.status === 'active')
     }, [items])
 
     useEffect(() => {
@@ -61,7 +61,7 @@ const Item = ({ onClose }) => {
                 <Countdown
                     duration={activeItem?.activated_at && activeItem?.duration ? Math.max(0, new Date(activeItem.activated_at).getTime() + activeItem.duration * 1000 - Date.now()) : 0}
                     color='#2C2C2C'
-                    onComplete={() => onComplete()}
+                    onComplete={() => deactivateItem(activeItem)}
                 />
             </div>
         </div>

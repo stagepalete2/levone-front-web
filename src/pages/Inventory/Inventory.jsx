@@ -35,11 +35,11 @@ const Inventory = () => {
         const birthday = []
 
         items.forEach(item => {
-            if (item.status === 'ACTIVE') {
+            if (item.status === 'active') {
             active.push(item)
-            } else if (item.status === 'EXPIRED') {
+            } else if (item.status === 'expired' || item.status === 'used') {
             used.push(item)
-            } else if (item.acquired_from === 'BIRTHDAY_PRIZE') {
+            } else if (item.acquired_from === 'birthday') {
             birthday.push(item)
             } else {
             available.push(item)
@@ -51,11 +51,11 @@ const Inventory = () => {
     const totalCount = (super_prize_items?.length || 0) + availableItems.length + activeItems.length
 
     const handleActivatePrize = (prize) => {
-        if (prize.status === 'ACTIVE') {
+        if (prize.status === 'active') {
             handleNavigation('/coupon')
             return
         }
-        if (prize.acquired_from === 'BIRTHDAY_PRIZE') {
+        if (prize.acquired_from === 'birthday') {
             pushModal({
             pageId: PAGE_ID,
                 modal: {
@@ -65,7 +65,7 @@ const Inventory = () => {
             })
             return
         }
-        if (cooldown?.is_active || prize.last_activated_at) {
+        if (cooldown?.is_active) {
             return
         }
         pushModal({

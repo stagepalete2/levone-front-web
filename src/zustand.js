@@ -149,7 +149,7 @@ export const useInventory = create((set) => ({
 
   deactivateItem: (item) => set((state) => ({
     items: state.items.map((i) =>
-      i.id === item.id ? { ...i, status: 'EXPIRED' } : i
+      i.id === item.id ? { ...i, status: 'expired' } : i
     ),
   })),
 }));

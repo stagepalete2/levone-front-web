@@ -5,9 +5,9 @@ const BirthdayPrize = ({ item, click, isUsed = false }) => {
 	let isDisabled = false
 	let extraClass = ''
 
-	if (item.is_active || item.status === 'ACTIVE') {
+	if (item.status === 'active') {
 		buttonLabel = 'КУПОН'
-	} else if (isUsed || item.status === 'EXPIRED') {
+	} else if (isUsed || item.status === 'expired' || item.status === 'used') {
 		buttonLabel = 'ИСПОЛЬЗОВАН'
 		isDisabled = true
 		extraClass = styles.cardUsed
@@ -22,7 +22,7 @@ const BirthdayPrize = ({ item, click, isUsed = false }) => {
 
 			<div className={styles.imageWrapper}>
 				<img
-					src={item.product_image}
+					src={item.product_image_url || '/images/placeholder.png'}
 					alt={item.product_name}
 					loading='lazy'
 				/>
