@@ -86,23 +86,13 @@ const useInitData = () => {
 		setInitError(null)
 
 		try {
-			// 1. Получаем Компанию
+			// 1. Получаем Компанию (возвращает только {domain, name})
 			const companyResponse = await getCompany({ company: company })
 			if (!companyResponse?.domain) {
 				throw new Error("Company not found")
 			}
 
-			// Устанавливаем данные компании
 			setCompany(companyResponse.domain)
-			setLogo({
-				logotype: companyResponse.images?.logotype_image,
-				coin: companyResponse.images?.coin_image,
-				card: companyResponse.images?.card_image
-			})
-			setGroup({
-				group_name: companyResponse.group_name,
-				group_id: companyResponse.group_id
-			})
 			setCompanyId(company)
 			setBranchId(branch)
 			setTableId(table)
@@ -146,9 +136,21 @@ const useInitData = () => {
 				name: branchResponse.name,
 				yandex_map: branchResponse.yandex_map,
 				gis_map: branchResponse.gis_map,
-				story: branchResponse.story,
-				logotype_image: branchResponse.logotype_image,
-				coin_image: branchResponse.coin_image
+				story: branchResponse.story_image_url,
+				logotype_image: branchResponse.logotype_url,
+				coin_image: branchResponse.coin_icon_url
+			})
+
+			// Логотип и монета — из branch response
+			setLogo({
+				logotype: branchResponse.logotype_url,
+				coin: branchResponse.coin_icon_url,
+			})
+
+			// Группа ВК — из branch response
+			setGroup({
+				group_name: branchResponse.vk_group_name,
+				group_id: branchResponse.vk_group_id
 			})
 
 			// 4. Логика Рефералов и Доставки (ВАЖНО: не делаем return, чтобы данные грузились дальше)
@@ -167,11 +169,10 @@ const useInitData = () => {
 			}
 
 			// 5. Проверка сообщества
-			// Не блокируем выполнение, если проверка упадет (можно обернуть в try/catch или оставить так)
 			await checkIsJoinedCommunity({
 				vk_id: client.vk_id || client.vk_user_id,
 				branch: branch,
-				group_id: companyResponse.group_id
+				group_id: branchResponse.vk_group_id
 			})
 
 			// 6. Загрузка основных данных (параллельно)
@@ -246,7 +247,6 @@ const useInitData = () => {
 			setIsLoading(false)
 		}
 	}, [
-		// Зависимости (оставил как есть, но по-хорошему их можно сократить, если линтер позволяет)
 		company, branch, table, is_referral, from, delivery,
 		setCompany, setGroup, setBranch, setTableId, setCompanyId, setBranchId,
 		setCatalog, setInventory, setSuperPrize, setQuests, setActiveQuest,

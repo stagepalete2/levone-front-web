@@ -1,5 +1,4 @@
 
-import { getTimeLeft } from '../../../helpers/time'
 import { useGameCooldown, useView } from '../../../zustand'
 import Countdown from '../../Countdown/Countdown'
 
@@ -45,7 +44,7 @@ const Game = () => {
 						? (
 							<button className={styles.button}>
 								<img src="/icons/clock.png" alt="Clock" style={{ width: 25, height: 25 }} />
-								<Countdown duration={getTimeLeft(cooldown.last_activated_at, cooldown.duration, import.meta.env.VITE_TZ)} color='text-dark' onComplete={() => onComplete()} />
+								<Countdown duration={(cooldown.seconds_remaining ?? 0) * 1000} color='text-dark' onComplete={() => onComplete()} />
 							</button>
 						) : (
 							<button className={styles.button} onClick={() => startGame()}>

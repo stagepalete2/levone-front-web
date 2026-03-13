@@ -1,5 +1,4 @@
 import Lottie from 'lottie-react'; // 1. Импорт Lottie
-import { getTimeLeft } from '../../../helpers/time'
 import { useCompany, useLogo, useModal, useQuestCooldown } from '../../../zustand'
 import Countdown from '../../Countdown/Countdown'
 
@@ -60,7 +59,7 @@ const Modal = ({ onClose }) => {
 					{/* Белая карточка с контентом */}
 					<div className={styles.card}>
 						<Countdown
-							duration={getTimeLeft(cooldown?.last_activated_at, cooldown?.duration, import.meta.env.VITE_TZ)}
+							duration={(cooldown?.seconds_remaining ?? 0) * 1000}
 							onComplete={() => onComplete()}
 							className={styles.countdown}
 							color='#2C2C34' // Темный цвет цифр для белого фона

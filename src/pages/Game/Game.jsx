@@ -7,7 +7,6 @@ import PageBackground from '../../components/PageBackground/PageBackground'
 
 import Countdown from '../../components/Countdown/Countdown'
 import Rocket from '../../components/Game/Board/Rocket'
-import { getTimeLeft } from '../../helpers/time'
 import { useAuth, useClient, useGameCooldown, useHasShownPostStory, useModal, useParams, usePlay, useView } from '../../zustand'
 import styles from './Game.module.scss'
 
@@ -63,7 +62,7 @@ const Intro = () => {
 						) : (
 							<button className={styles.playButton}>
 								<Countdown
-									duration={getTimeLeft(cooldown.last_activated_at, cooldown.duration, import.meta.env.VITE_TZ)}
+									duration={(cooldown.seconds_remaining ?? 0) * 1000}
 									onComplete={() => onComplete()}
 									color='black'
 								/>
